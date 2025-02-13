@@ -1,0 +1,1 @@
+SPORT_PARK_API_URL = "https://api.data.amsterdam.nl/v1/sport/"
