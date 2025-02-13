@@ -20,7 +20,7 @@
       <q-scroll-area class="fit">
           <q-list>
             <template v-for="(menuItem, index) in menuList" :key="index">
-              <q-item clickable :active="menuItem.label === 'Map'" v-ripple>
+              <q-item clickable :active="menuItem.label === 'Map'" v-ripple :to="menuItem.to">
                 <q-item-section avatar>
                   <q-icon :name="menuItem.icon" />
                 </q-item-section>
@@ -53,14 +53,14 @@
           <q-separator />
 
           <!-- Menu Options -->
-          <q-item clickable v-ripple>
+          <q-item clickable v-ripple to="./profile">
             <q-item-section avatar>
-              <q-icon name="settings" />
+              <q-icon name="person" />
             </q-item-section>
-            <q-item-section>Settings</q-item-section>
+            <q-item-section>Profile</q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple>
+          <q-item clickable v-ripple to="./help">
             <q-item-section avatar>
               <q-icon name="help_outline" />
             </q-item-section>
@@ -126,28 +126,33 @@ const menuList = [
   {
     icon: 'map',
     label: 'Map',
-    separator: false
+    separator: false,
+    to: './'
   },
   {
     icon: 'thumbs_up_down',
     label: 'My ratings',
-    separator: true
+    separator: true,
+    to: './myratings'
   },
   {
     icon: 'settings',
     label: 'Settings',
-    separator: false
+    separator: false,
+    to: './settings'
   },
   {
     icon: 'feedback',
     label: 'Send Feedback',
-    separator: false
+    separator: false,
+    to: './feedback'
   },
   {
     icon: 'help',
     iconColor: 'primary',
     label: 'Help',
-    separator: false
+    separator: false,
+    to: './help'
   }
 ]
 </script>
