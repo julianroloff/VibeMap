@@ -1,38 +1,51 @@
 import requests
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from config import SPORT_PARK_API_URL
 from pyproj import Transformer
+from models import APILocation
+from dependencies import get_db
 
-# Transformer to convert RD coordinates (EPSG:28992) to Latitude/Longitude (EPSG:4326)
+# Transform coordinates from RD New (EPSG:28992) to WGS84 (EPSG:4326)
 transformer = Transformer.from_crs("EPSG:28992", "EPSG:4326", always_xy=True)
 
-# Fetch sport park data
-def fetch_sport_park():
-    url = f"{SPORT_PARK_API_URL}openbaresportplek/"  # Ensure single slash
+async def fetch_and_save_sport_parks(db: AsyncSession):
+    """Fetches sport park data and saves it to the database"""
+    url = f"{SPORT_PARK_API_URL}"
     response = requests.get(url)
-
-    print(f"DEBUG: Requesting URL: {url}")  # Log the correct URL
-    print(f"DEBUG: Response Status Code: {response.status_code}")
-    print(f"DEBUG: Response JSON: {response.json()}")
 
     if response.status_code == 200:
         data = response.json()
         sport_parks = []
 
-        for park in data.get("_embedded", {}).get("openbaresportplek", []):
-            rd_x, rd_y = park["geometry"].get("coordinates", [None, None])
-            if rd_x is not None and rd_y is not None:
-                lon, lat = transformer.transform(rd_x, rd_y)  # Convert RD to Latitude/Longitude
-            else:
-                lon, lat = None, None  # Handle missing coordinates
+        for park in data.get("_embedded", {}).get("park", []):  # Fix key to "park"
+            name = park.get("omschrijving")  # Fix key to "omschrijving"
+            sport = park.get("objectsubtype")  # Fix key to "objectsubtype"
+            
+            # Extract first coordinate from MultiPolygon
+            try:
+                rd_x, rd_y = park["geometry"]["coordinates"][0][0][0]  # Get first point
+                lon, lat = transformer.transform(rd_x, rd_y)  # Convert to lat/lon
+            except (KeyError, IndexError, TypeError):
+                continue  # Skip if coordinates are missing
 
-            sport_parks.append({
-                "id": park.get("id"),
-                "name": park.get("naam"),
-                "sport": park.get("sportvoorziening"),
-                "latitude": lat,
-                "longitude": lon
-            })
-        
-        return sport_parks if sport_parks else []  # Return an empty list if no data
-    
-    return []  # Return an empty list instead of None
+            # Avoid duplicates
+            existing = (await db.execute(select(APILocation).filter(APILocation.id == park.get("id")))).scalars().first()
+            if existing:
+                continue
+
+            new_park = APILocation(
+                id=park.get("id"),
+                name=name,
+                sport=sport,
+                latitude=lat,
+                longitude=lon,
+                geom=f"POINT({lon} {lat})"
+            )
+            db.add(new_park)
+            sport_parks.append(new_park)
+
+        await db.commit()
+        return sport_parks
+
+    return []
