@@ -33,6 +33,9 @@
 
           </q-list>
         </q-scroll-area>
+        <div class="version-info text-caption text-grey text-center">
+          vibemap v0.1.1
+        </div>
     </q-drawer>
 
     <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
