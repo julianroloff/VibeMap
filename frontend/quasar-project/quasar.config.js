@@ -66,7 +66,15 @@ export default defineConfig((/* ctx */) => {
             useFlatConfig: true
           }
         }, { server: false }]
-      ]
+      ],
+      env:{
+        options: JSON.stringify({
+            load: {
+              key: 'xxxxxxxxxxxxxxxxxxxxxx'
+            },
+            installComponents: true
+        })
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver

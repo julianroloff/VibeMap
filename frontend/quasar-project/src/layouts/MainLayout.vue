@@ -1,102 +1,150 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+  <q-layout view="hHh lpR fFf">
 
-        <q-toolbar-title>
-          Quasar App
+    <q-header elevated class="bg-transparent text-primary overflow-hidden m-5 pb-5">
+      <q-toolbar class="q-card">
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+
+        <q-toolbar-title class="text-center font-karla fw-600">
+          <q-avatar>
+            <img src="../assets/vibemap-logo.svg" alt="VibeMap Logo" />
+          </q-avatar>
+          vibemap
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn dense flat round icon="person" @click="toggleRightDrawer" />
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
+      <q-scroll-area class="fit">
+          <q-list>
+            <template v-for="(menuItem, index) in menuList" :key="index">
+              <q-item clickable :active="menuItem.label === 'Map'" v-ripple>
+                <q-item-section avatar>
+                  <q-icon :name="menuItem.icon" />
+                </q-item-section>
+                <q-item-section>
+                  {{ menuItem.label }}
+                </q-item-section>
+              </q-item>
+              <q-separator :key="'sep' + index"  v-if="menuItem.separator" />
+            </template>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+          </q-list>
+        </q-scroll-area>
+    </q-drawer>
+
+    <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
+      <q-scroll-area class="fit">
+        <q-list>
+          <!-- Profile Header -->
+          <q-item class="q-pa-md column items-center">
+            <q-avatar size="72px">
+              <img src="../assets/agos-profile.jpeg" alt="User Avatar" />
+            </q-avatar>
+            <div class="q-mt-md text-h6">Agoston</div>
+            <div class="text-caption text-grey">agoston@email.com</div>
+          </q-item>
+
+          <q-separator />
+
+          <!-- Menu Options -->
+          <q-item clickable v-ripple>
+            <q-item-section avatar>
+              <q-icon name="settings" />
+            </q-item-section>
+            <q-item-section>Settings</q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple>
+            <q-item-section avatar>
+              <q-icon name="help_outline" />
+            </q-item-section>
+            <q-item-section>Help</q-item-section>
+          </q-item>
+
+          <q-separator />
+
+          <!-- Logout -->
+          <q-item clickable v-ripple class="text-red">
+            <q-item-section avatar>
+              <q-icon name="logout" color="red" />
+            </q-item-section>
+            <q-item-section>Logout</q-item-section>
+          </q-item>
+        </q-list>
+      </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <!--q-footer elevated class="bg-grey-8 text-white">
+      <q-toolbar>
+        <q-toolbar-title>
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+          </q-avatar>
+          <div>Title</div>
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-footer-->
+
   </q-layout>
 </template>
 
-<script setup>
+<script>
 import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
 
-const linksList = [
+export default {
+  setup () {
+    const leftDrawerOpen = ref(false)
+    const rightDrawerOpen = ref(false)
+
+    return {
+      leftDrawerOpen,
+      toggleLeftDrawer () {
+        leftDrawerOpen.value = !leftDrawerOpen.value
+      },
+
+      rightDrawerOpen,
+      toggleRightDrawer () {
+        rightDrawerOpen.value = !rightDrawerOpen.value
+      },
+
+      drawer: ref(false),
+      menuList
+    }
+  }
+}
+const menuList = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
+    icon: 'map',
+    label: 'Map',
+    separator: false
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
+    icon: 'thumbs_up_down',
+    label: 'My ratings',
+    separator: true
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
+    icon: 'settings',
+    label: 'Settings',
+    separator: false
   },
   {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
+    icon: 'feedback',
+    label: 'Send Feedback',
+    separator: false
   },
   {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    icon: 'help',
+    iconColor: 'primary',
+    label: 'Help',
+    separator: false
   }
 ]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
 </script>

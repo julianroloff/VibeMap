@@ -1,1 +1,40 @@
+@font-face {
+    font-family: Karla;
+    src: url(./fonts/Karla.woff);
+  }
+  
+  // declare a class which applies it
+.font-karla {
+    font-family: 'Karla' !important;
+}
+
 // app global css in SCSS form
+.google-map {
+    height: 50vh; /* Top half of the screen */
+    width: 100%;
+    border-radius: 15px;
+}
+.rating-icons {
+    font-size: 20vw;
+}
+.p-5 {
+    padding: 5px;
+}
+.pb-5 {
+    padding-bottom: 5px;
+}
+.pt-5 {
+    padding-top: 5px;
+}
+.m-5 {
+    margin: 5px;
+}
+.fw-600 {
+    font-weight: 600;
+}
+.radius-10 {
+    border-radius: 10px;
+}
+.q-card {
+    border-radius: 15px;
+}

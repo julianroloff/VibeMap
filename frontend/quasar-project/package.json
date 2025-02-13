@@ -1,7 +1,7 @@
 {
   "name": "quasar-project",
   "version": "0.0.1",
-  "description": "VibeMap helps you find the stressfree spots in Amsterdam",
+  "description": "A Quasar Project",
   "productName": "VibeMap",
   "author": "Ágoston Reischl <58388975+reischlago@users.noreply.github.com>",
   "type": "module",
