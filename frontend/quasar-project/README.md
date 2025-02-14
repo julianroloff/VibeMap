@@ -1,6 +1,6 @@
 # VibeMap (quasar-project)
 
-VibeMap helps you find the stressfree spots in Amsterdam
+A Quasar Project
 
 ## Install the dependencies
 ```bash
