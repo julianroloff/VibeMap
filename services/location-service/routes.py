@@ -4,20 +4,24 @@ from sqlalchemy.future import select
 from sqlalchemy import select, func
 from models import Location
 from schemas import LocationCreate, LocationResponse
-from dependencies import get_db
+from dependencies import get_db, get_current_user
 from geoalchemy2.functions import ST_Point
 
 router = APIRouter()
 
-#Create a new location entry
+#Create new location entry
 @router.post("/locations/", response_model=LocationResponse)
-async def add_location(location: LocationCreate, db: AsyncSession = Depends(get_db)):
+async def add_location(
+    location: LocationCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(get_current_user),  # ✅ Extracts user_id from token
+):
     new_location = Location(
-        name = location.name,
+        user_Id = current_user["user_id"], 
         latitude = location.latitude,
         longitude = location.longitude,
         stress_level = location.stress_level,
-        geom = ST_Point(location.longitude, location.latitude) # this stores a location as a point in PostGIS
+        geom = ST_Point(location.longitude, location.latitude)
     )
     db.add(new_location)
     await db.commit()
@@ -30,7 +34,7 @@ async def get_locations(db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(
             Location.id,
-            Location.name,
+            Location.user_Id,
             Location.latitude,
             Location.longitude,
             Location.stress_level,
@@ -42,7 +46,7 @@ async def get_locations(db: AsyncSession = Depends(get_db)):
     locations = [
         {
             "id": row.id,
-            "name": row.name,
+            "userId": row.user_Id,
             "latitude": row.latitude,
             "longitude": row.longitude,
             "stress_level": row.stress_level,

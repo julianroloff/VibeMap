@@ -8,3 +8,7 @@ class HeatmapData(Base):
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     aggregated_stress = Column(Float, nullable=False)
+    
+    # ToDo: Size of Heatmap Bubble
+    # ToDo: Opacity
+    
