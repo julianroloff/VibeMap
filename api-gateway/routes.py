@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import requests
 
-router = APIRouter
+router = APIRouter()
 
 # Service URLs
 
@@ -26,5 +26,11 @@ def proxy_heatmap(path: str):
 @router.get("/ml/{path:path}")
 def proxy_ml(path: str):
     return requests.get(f"{ML_SERVICE_URL}/{path}").json()
+
+@router.get("external/{path:path}")
+def proxy_external(path: str):
+    return requests.get(f"{EXTERNAL_API_FETCHER_URL}/{path}").json()
+
+
 
 
