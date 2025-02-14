@@ -5,7 +5,7 @@
       <div id="map" class="google-map q-card"></div>
     </div>
     <div class="rate-cont p-5 pt-5">
-      <q-card class="">
+      <q-card class="rate-card">
         <q-card-section>
           <div class="text-h6">Rate this location</div>
           <q-rating class="rating-icons"
@@ -35,6 +35,7 @@
 <script>
 import { ref } from 'vue'
 
+
 export default {
   data() {
     return {
@@ -53,7 +54,7 @@ export default {
       }
 
       const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCa6szZqcobw9AEf8KiqXUDpAoLgSR6v7A`;
       script.async = true;
       script.defer = true;
       script.onload = this.initMap;
@@ -66,7 +67,7 @@ export default {
         return this.loadDefaultLocation();
       }
 
-      this.map = new google.maps.Map(document.getElementById("map"), {
+      this.map = new window.google.maps.Map(document.getElementById("map"), {
         center: { lat: 52.377956, lng: 	4.897070 }, // Default (Amsterdam)
         zoom: 12,
         mapTypeControl: false,
@@ -89,11 +90,11 @@ export default {
 
           // If first time, create native location marker
           if (!this.userMarker) {
-            this.userMarker = new google.maps.Marker({
+            this.userMarker = new window.google.maps.Marker({
               position: userLocation,
               map: this.map,
               icon: {
-                path: google.maps.SymbolPath.CIRCLE,
+                path: window.google.maps.SymbolPath.CIRCLE,
                 scale: 8, // Size of the dot
                 fillColor: "#4285F4",
                 fillOpacity: 1,

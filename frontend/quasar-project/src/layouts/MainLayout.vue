@@ -41,41 +41,66 @@
     <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
       <q-scroll-area class="fit">
         <q-list>
-          <!-- Profile Header -->
-          <q-item class="q-pa-md column items-center">
-            <q-avatar size="72px">
-              <img src="../assets/agos-profile.jpeg" alt="User Avatar" />
-            </q-avatar>
-            <div class="q-mt-md text-h6">Agoston</div>
-            <div class="text-caption text-grey">agoston@email.com</div>
-          </q-item>
+          <!-- Show Login Form if not logged in -->
+          <template v-if="!isLoggedIn">
+            <q-item class="q-pa-md column items-center">
+              <q-avatar size="72px">
+                <img src="../assets/vibemap-logo.svg" alt="User Avatar" />
+              </q-avatar>
+              <div class="q-mt-md text-h6">Welcome</div>
+              <div class="text-caption text-grey">Please login or sign up</div>
+            </q-item>
 
-          <q-separator />
+            <q-separator />
 
-          <!-- Menu Options -->
-          <q-item clickable v-ripple to="./profile">
-            <q-item-section avatar>
-              <q-icon name="person" />
-            </q-item-section>
-            <q-item-section>Profile</q-item-section>
-          </q-item>
+            <q-item>
+              <q-input v-model="email" label="Email" type="email" filled  class="full-width"/>
+            </q-item>
+            <q-item>
+              <q-input v-model="password" label="Password" type="password" filled  class="full-width"/>
+            </q-item>
 
-          <q-item clickable v-ripple to="./help">
-            <q-item-section avatar>
-              <q-icon name="help_outline" />
-            </q-item-section>
-            <q-item-section>Help</q-item-section>
-          </q-item>
+            <q-item class="q-gutter-sm w-100">
+              <q-btn label="Login" color="primary" class="col-6" @click="login" />
+              <q-btn label="Signup" color="secondary" outline class="col-6" to="./signup" />
+            </q-item>
+          </template>
 
-          <q-separator />
+          <!-- Show Profile Section if logged in -->
+          <template v-else>
+            <q-item class="q-pa-md column items-center">
+              <q-avatar size="72px">
+                <img src="../assets/agos-profile.jpeg" alt="User Avatar" />
+              </q-avatar>
+              <div class="q-mt-md text-h6">Agoston</div>
+              <div class="text-caption text-grey">agoston@email.com</div>
+            </q-item>
 
-          <!-- Logout -->
-          <q-item clickable v-ripple class="text-red">
-            <q-item-section avatar>
-              <q-icon name="logout" color="red" />
-            </q-item-section>
-            <q-item-section>Logout</q-item-section>
-          </q-item>
+            <q-separator />
+
+            <q-item clickable v-ripple to="./profile">
+              <q-item-section avatar>
+                <q-icon name="person" />
+              </q-item-section>
+              <q-item-section>Profile</q-item-section>
+            </q-item>
+
+            <q-item clickable v-ripple to="./help">
+              <q-item-section avatar>
+                <q-icon name="help_outline" />
+              </q-item-section>
+              <q-item-section>Help</q-item-section>
+            </q-item>
+
+            <q-separator />
+
+            <q-item clickable v-ripple class="text-red" @click="logout">
+              <q-item-section avatar>
+                <q-icon name="logout" color="red" />
+              </q-item-section>
+              <q-item-section>Logout</q-item-section>
+            </q-item>
+          </template>
         </q-list>
       </q-scroll-area>
     </q-drawer>
@@ -104,7 +129,30 @@ import { ref } from 'vue'
 export default {
   setup () {
     const leftDrawerOpen = ref(false)
-    const rightDrawerOpen = ref(false)
+    const isLoggedIn = ref(false);
+    const email = ref("");
+    const password = ref("");
+    const rightDrawerOpen = ref(false);
+
+    const login = () => {
+      if (email.value && password.value) {
+        isLoggedIn.value = true;
+      }
+    };
+
+    const logout = () => {
+      isLoggedIn.value = false;
+      email.value = "";
+      password.value = "";
+    };
+
+    const menuList = [
+      { icon: "map", label: "Map", separator: false, to: "/" },
+      { icon: "thumbs_up_down", label: "My ratings", separator: true, to: "/myratings" },
+      { icon: "settings", label: "Settings", separator: false, to: "/settings" },
+      { icon: "feedback", label: "Send Feedback", separator: false, to: "/feedback" },
+      { icon: "help", label: "Help", separator: false, to: "/help" },
+    ];
 
     return {
       leftDrawerOpen,
@@ -118,41 +166,13 @@ export default {
       },
 
       drawer: ref(false),
-      menuList
+      isLoggedIn,
+      email,
+      password,
+      menuList,
+      login,
+      logout
     }
   }
 }
-const menuList = [
-  {
-    icon: 'map',
-    label: 'Map',
-    separator: false,
-    to: './'
-  },
-  {
-    icon: 'thumbs_up_down',
-    label: 'My ratings',
-    separator: true,
-    to: './myratings'
-  },
-  {
-    icon: 'settings',
-    label: 'Settings',
-    separator: false,
-    to: './settings'
-  },
-  {
-    icon: 'feedback',
-    label: 'Send Feedback',
-    separator: false,
-    to: './feedback'
-  },
-  {
-    icon: 'help',
-    iconColor: 'primary',
-    label: 'Help',
-    separator: false,
-    to: './help'
-  }
-]
 </script>

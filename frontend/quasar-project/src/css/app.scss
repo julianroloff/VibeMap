@@ -9,10 +9,20 @@
 }
 
 // app global css in SCSS form
+html, body, #q-app {
+    height: 100%;
+}
 .google-map {
-    height: 50vh; /* Top half of the screen */
+    height: 100%;
     width: 100%;
     border-radius: 15px;
+}
+.map-cont {
+    height: calc(55vh - 55px / 2) !important;
+}
+.rate-cont {
+    height: calc(45vh - 55px / 2) !important;
+    padding-bottom: 30px !important;
 }
 .version-info {
     position: absolute;
@@ -25,6 +35,24 @@
     justify-content: space-around;
     width: 100%;
     flex-wrap: nowrap;
+}
+.w-100 {
+    width: 100%;
+}
+.h-100 {
+    height: 100%;
+}
+.rate-card{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: stretch;
+    align-content: stretch;
+    flex-wrap: nowrap;
+}
+.half-width {
+    width: 50%;
 }
 .p-5 {
     padding: 5px;
