@@ -134,9 +134,38 @@ export default {
     const password = ref("");
     const rightDrawerOpen = ref(false);
 
-    const login = () => {
+    const login = async () => {
       if (email.value && password.value) {
-        isLoggedIn.value = true;
+        const requestBody = {
+          email: email.value,
+          password: password.value
+        };
+
+        try {
+          const response = await fetch("http://localhost:8001/auth/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          });
+
+          if (response.ok) {
+            // If the response is successful, set isLoggedIn to true
+            isLoggedIn.value = true;
+            // Optionally, handle the response data (e.g., save the token, etc.)
+            const data = await response.json();
+            console.log(data);  // handle the response data as needed
+          } else {
+            // Handle error if request fails
+            console.error("Login failed", response.statusText);
+          }
+        } catch (error) {
+          // Catch network or other errors
+          console.error("Error during login", error);
+        }
+      } else {
+        console.error("Email and password are required");
       }
     };
 
