@@ -12,18 +12,27 @@
 html, body, #q-app {
     height: 100%;
 }
+.main-page {
+    position: fixed;
+    width: 100%;
+}
 .google-map {
     height: 100%;
     width: 100%;
     border-radius: 15px;
 }
 .map-cont {
-    height: calc(55vh - 55px / 2) !important;
+    height: calc(74vh - 55px / 2) !important;
 }
 .rate-cont {
-    height: calc(45vh - 55px / 2) !important;
+    height: auto !important;
+    min-height: calc(25vh - 55px / 2) !important;
     padding-bottom: 30px !important;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
+
 .version-info {
     position: absolute;
     bottom: 0;
@@ -31,7 +40,7 @@ html, body, #q-app {
     right: 0;
 }
 .rating-icons {
-    font-size: 20vw;
+    font-size: 78px;
     justify-content: space-around;
     width: 100%;
     flex-wrap: nowrap;
@@ -50,6 +59,54 @@ html, body, #q-app {
     align-items: stretch;
     align-content: stretch;
     flex-wrap: nowrap;
+}
+.myratings-card {
+    width: 100% !important;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: stretch;
+    justify-content: space-between;
+    align-items: stretch;
+    margin: 5px auto;
+}
+.myratings-card-inner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    align-content: stretch;
+    justify-content: space-between;
+    width: 100%;
+    .text-h6{
+        width: 100%;
+    }
+    .map-elem {
+        width: 35%;
+        padding-bottom: 35%;
+    }
+    .rate-details {
+        width: 65%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: space-around;
+        align-items: center;
+        text-align: left;
+        padding: 0 10px;
+        .rate-date {
+            width: 60%;
+        }
+        .rate {
+            width: 40%;
+            text-align: center;
+            font-size: 40px;
+        }
+        .rate-reason {
+            font-size: 12px;
+            width: 100%;
+        }
+    }
 }
 .half-width {
     width: 50%;
@@ -74,4 +131,28 @@ html, body, #q-app {
 }
 .q-card {
     border-radius: 15px;
+}
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-evenly;
+    align-items: stretch;
+}
+.picture-edit {
+    position: absolute;
+    background: #ffffff5e;
+    border-radius: 100%;
+    width: 100%;
+    height: 100%;
+    > div {
+        display: none;
+    }
+}
+.picture-edit-icon {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    font-size: 35px;
 }

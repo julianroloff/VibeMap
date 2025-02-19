@@ -1,13 +1,14 @@
 
 <template>
-  <q-page class="q-pa-none">
+  <q-page class="q-pa-none main-page">
     <div class="map-cont p-5 pb-5">
       <div id="map" class="google-map q-card"></div>
+      <!--div id="recenter-btn" @click="trackUserLocation()">Recenter</div-->
     </div>
     <div class="rate-cont p-5 pt-5">
       <q-card class="rate-card">
         <q-card-section>
-          <div class="text-h6">Rate this location</div>
+          <div class="text-h6">Rate your location</div>
           <q-rating class="rating-icons"
             v-model="ratingModel"
             :max="4"
@@ -15,7 +16,7 @@
             :color-selected="ratingColors"
             :icon="icons"
           />
-          <q-input
+          <q-input v-if="ratingModel"
             v-model="reason"
             label="Reason"
             placeholder="Why did you give this rating?"
@@ -24,7 +25,7 @@
             optional
           />
         </q-card-section>
-        <q-card-actions align="right">
+        <q-card-actions align="right" v-if="ratingModel">
           <q-btn label="Submit" color="primary" @click="submitRating" class="radius-10" />
         </q-card-actions>
       </q-card>
@@ -71,6 +72,12 @@ export default {
         center: { lat: 52.377956, lng: 	4.897070 }, // Default (Amsterdam)
         zoom: 12,
         mapTypeControl: false,
+        zoomControl: false,
+        cameraControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: false
       });
 
       this.trackUserLocation();
@@ -120,7 +127,7 @@ export default {
     },
 
     loadDefaultLocation() {
-      const defaultLocation = { lat: 40.73061, lng: -73.935242 }; // New York fallback
+      const defaultLocation = { lat: 52.377956, lng: 	4.897070 }; // Amsterdam fallback
       this.map.setCenter(defaultLocation);
       this.map.setZoom(12);
     },
