@@ -1,5 +1,5 @@
 <template>
-  <div class="text-primary text-center q-pa-md flex flex-center w-100">
+  <div class="text-primary text-center q-pa-md flex flex-center w-100" v-if="isLoggedIn">
     <div class="text-h6">My ratings</div>
 
     <q-card v-for="(rating, index) in ratings" :key="index" class="myratings-card">
@@ -12,7 +12,17 @@
         </div>
       </q-card-section>
     </q-card>
-
+  </div>
+  <div class="text-primary text-center q-pa-md flex flex-center w-100" v-if="!isLoggedIn">
+    <q-card>
+        <q-card-section>
+          <div class="text-h7">Please sign up or log in to be able to rate your location.</div>
+          <q-item class="q-gutter-sm w-100">
+            <q-btn label="Login" color="primary" class="col-6" to="/profile" />
+            <q-btn label="Signup" color="secondary" outline class="col-6" to="./signup" />
+          </q-item>
+        </q-card-section>
+      </q-card>
     <q-btn class="q-mt-xl text-primary" unelevated to="/" label="Go Home" no-caps />
   </div>
 </template>
@@ -97,11 +107,21 @@ export default {
       return colors[value - 1] || ''; // Default to an empty string if value is out of range
     }
 
+    const isLoggedIn = ref(true)
+    // Check if the user is logged in by reading localStorage
+    onMounted(() => {
+      isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
+      //localStorage.setItem("isLoggedIn", "true") 
+      //console.log(isLoggedIn.value);
+      //console.log(profileEdit.value)
+    })
+
     return {
       ratings,
       mapElements,
       getRatingIcon,
-      getRatingColor
+      getRatingColor,
+      isLoggedIn
     };
   }
 };

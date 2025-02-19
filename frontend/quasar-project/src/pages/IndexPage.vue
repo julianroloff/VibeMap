@@ -6,7 +6,7 @@
       <!--div id="recenter-btn" @click="trackUserLocation()">Recenter</div-->
     </div>
     <div class="rate-cont p-5 pt-5">
-      <q-card class="rate-card">
+      <q-card class="rate-card" v-if="isLoggedIn">
         <q-card-section>
           <div class="text-h6">Rate your location</div>
           <q-rating class="rating-icons"
@@ -29,12 +29,21 @@
           <q-btn label="Submit" color="primary" @click="submitRating" class="radius-10" />
         </q-card-actions>
       </q-card>
+      <q-card v-if="!isLoggedIn">
+        <q-card-section>
+          <div class="text-h7">Please sign up or log in to be able to rate your location.</div>
+          <q-item class="q-gutter-sm w-100">
+            <q-btn label="Login" color="primary" class="col-6" to="/profile" />
+            <q-btn label="Signup" color="secondary" outline class="col-6" to="./signup" />
+          </q-item>
+        </q-card-section>
+      </q-card>
     </div>
   </q-page>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 
 export default {
@@ -133,6 +142,14 @@ export default {
     },
   },
   setup () {
+    const isLoggedIn = ref(true)
+    // Check if the user is logged in by reading localStorage
+    onMounted(() => {
+      isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
+      //localStorage.setItem("isLoggedIn", "true") 
+      //console.log(isLoggedIn.value);
+      //console.log(profileEdit.value)
+    })
     return {
       ratingModel: ref(0),
       ratingColors: [ 'red', 'orange', 'green', 'green-9'],
@@ -141,7 +158,8 @@ export default {
         'sentiment_dissatisfied',
         'sentiment_satisfied',
         'sentiment_very_satisfied'
-      ]
+      ],
+      isLoggedIn
     }
   }
 };

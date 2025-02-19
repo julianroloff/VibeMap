@@ -176,6 +176,7 @@ export default {
           if (password.value == storedPassword) {
             isLoggedIn.value = true;
             localStorage.setItem('isLoggedIn', 'true')
+            refreshPage();
           }
           else {
             alert("Wrong password or email address Try again.")
