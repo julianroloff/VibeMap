@@ -1,8 +1,8 @@
 {
-  "name": "quasar-project",
+  "name": "vibemap",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "VibeMap",
+  "description": "vibemap",
+  "productName": "vibemap",
   "author": "Ágoston Reischl <58388975+reischlago@users.noreply.github.com>",
   "type": "module",
   "private": true,
