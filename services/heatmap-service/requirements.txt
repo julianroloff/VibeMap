@@ -8,5 +8,5 @@ pydantic
 numpy
 
 
-Starting this service:
-uvicorn main:app --reload --host 0.0.0.0 --port 8003
+#Starting this service:
+#uvicorn main:app --reload --host 0.0.0.0 --port 8003
