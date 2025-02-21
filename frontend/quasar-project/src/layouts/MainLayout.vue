@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" >
 
     <q-header elevated class="bg-transparent text-primary overflow-hidden p-5 pb-5">
       <q-toolbar class="q-card">
@@ -139,6 +139,7 @@ export default {
     const email = ref("")
     const password = ref("")
     const route = useRoute()  // Access the current route
+    const nightMode = ref(false);
 
     const menuList = [
       { icon: "map", label: "Map", separator: false, to: "/" },
@@ -159,6 +160,7 @@ export default {
     // Check if the user is logged in by reading localStorage
     onMounted(() => {
       isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
+      nightMode.value = JSON.parse(localStorage.getItem("nightMode")) || false;
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
     })
@@ -233,6 +235,7 @@ export default {
       password,
       isLoggedIn,  // Ensure this is reactive
       userInfo,
+      nightMode,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },

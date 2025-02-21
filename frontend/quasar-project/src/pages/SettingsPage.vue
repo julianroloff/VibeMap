@@ -10,7 +10,7 @@
       <q-card-section>
         <q-toggle v-model="constructionMarkings" label="Enable Construction Markings" @update:model-value="saveSetting('constructionMarkings', constructionMarkings)" />
         <q-toggle v-model="sportFacilities" label="Enable Sport Facility Markings" @update:model-value="saveSetting('sportFacilities', sportFacilities)" />
-        <q-toggle v-model="nightMode" label="Enable Night Mode" @update:model-value="saveSetting('nightMode', nightMode)" />
+        <q-toggle v-model="nightMode" label="Enable Dark Mode" @update:model-value="saveSetting('nightMode', nightMode)" />
       </q-card-section>
     </q-card>
   </q-page>
