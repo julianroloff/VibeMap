@@ -1,6 +1,7 @@
 <template>
   <div class=" text-primary text-center q-pa-md flex flex-center w-100">
     <q-list class="w-100">
+      <!-- Show Profile Section if NOT logged in -->
       <template v-if="!isLoggedIn">
         <q-item class="q-pa-md column items-center w-100">
           <q-avatar size="72px">
