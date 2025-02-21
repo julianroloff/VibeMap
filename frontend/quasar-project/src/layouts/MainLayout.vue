@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" >
 
     <q-header elevated class="bg-transparent text-primary overflow-hidden p-5 pb-5">
       <q-toolbar class="q-card">
@@ -16,7 +16,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
+    <q-drawer v-model="leftDrawerOpen" side="left" bordered>
       <q-scroll-area class="fit">
         <q-list>
           <template v-for="(menuItem, index) in menuList" :key="index">
@@ -42,7 +42,7 @@
       </div>
     </q-drawer>
 
-    <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
+    <q-drawer v-model="rightDrawerOpen" side="right" bordered>
       <q-scroll-area class="fit">
         <q-list>
           <!-- Show Login Form if not logged in -->
@@ -136,9 +136,11 @@ export default {
     const leftDrawerOpen = ref(false)
     const rightDrawerOpen = ref(false)
     const isLoggedIn = ref(false)
+    const loggedInId = ref("")
     const email = ref("")
     const password = ref("")
     const route = useRoute()  // Access the current route
+    const nightMode = ref(false);
 
     const menuList = [
       { icon: "map", label: "Map", separator: false, to: "/" },
@@ -159,6 +161,8 @@ export default {
     // Check if the user is logged in by reading localStorage
     onMounted(() => {
       isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
+      nightMode.value = JSON.parse(localStorage.getItem("nightMode")) || false;
+      loggedInId.value = localStorage.getItem("loggedInId");
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
     })
@@ -176,6 +180,7 @@ export default {
           if (password.value == storedPassword) {
             isLoggedIn.value = true;
             localStorage.setItem('isLoggedIn', 'true')
+            localStorage.setItem('loggedInId', Number(userInfo.value[0].userId))
             refreshPage();
           }
           else {
@@ -214,6 +219,7 @@ export default {
     const logout = () => {
       isLoggedIn.value = false;
       localStorage.removeItem("isLoggedIn");
+      localStorage.setItem('loggedInId', '')
       email.value = "";
       password.value = "";
       refreshPage();
@@ -232,7 +238,9 @@ export default {
       email,
       password,
       isLoggedIn,  // Ensure this is reactive
+      loggedInId,
       userInfo,
+      nightMode,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },

@@ -1,6 +1,7 @@
 <template>
   <div class=" text-primary text-center q-pa-md flex flex-center w-100">
     <q-list class="w-100">
+      <!-- Show Profile Section if NOT logged in -->
       <template v-if="!isLoggedIn">
         <q-item class="q-pa-md column items-center w-100">
           <q-avatar size="72px">
@@ -66,10 +67,11 @@ import { ref, onMounted } from 'vue'
 export default {
   setup () {
     const userInfo = ref([
-      { username: "Ágoston", email: "agoston@email.com", picture: "src/assets/agos-profile.jpeg", token: "password"},
-      //{ username: "Julian", email: "julian@email.com", picture: "src/assets/julian_profile.jpeg", token: ""}
+      { username: "Ágoston", userId: 1, email: "agoston@email.com", picture: "src/assets/agos-profile.jpeg", token: "password"},
+      //{ username: "Julian", userId: 2, email: "julian@email.com", picture: "src/assets/julian_profile.jpeg", token: "pass"}
     ]);
     const isLoggedIn = ref(true)
+    const loggedInId = ref("")
     const profileEdit = ref(false)
     const email = ref("")
     const password = ref("")
@@ -79,6 +81,7 @@ export default {
     // Check if the user is logged in by reading localStorage
     onMounted(() => {
       isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
+      loggedInId.value = localStorage.getItem("loggedInId");
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
       //console.log(profileEdit.value)
@@ -92,6 +95,7 @@ export default {
           if (password.value == storedPassword) {
             isLoggedIn.value = true;
             localStorage.setItem('isLoggedIn', 'true')
+            localStorage.setItem('loggedInId', Number(userInfo.value[0].userId))
           }
           else {
             alert("Wrong password or email address Try again.")
@@ -129,6 +133,7 @@ export default {
     const logout = () => {
       isLoggedIn.value = false;
       localStorage.setItem('isLoggedIn', 'false')
+      localStorage.setItem('loggedInId', null)
       email.value = "";
       password.value = "";
       refreshPage();
@@ -154,6 +159,7 @@ export default {
       email,
       password,
       isLoggedIn,
+      loggedInId,
       userInfo
     }
   }
