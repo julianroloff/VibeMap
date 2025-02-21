@@ -5,9 +5,6 @@
       <div id="map" class="google-map q-card"></div>
       <!--div id="recenter-btn" @click="trackUserLocation()">Recenter</div-->
     </div>
-    <div class="loadbtn">
-      <q-btn label="Load Heat Data" color="primary" @click="loadHeatData" class="radius-10" />
-    </div>
     <div class="rate-cont p-5 pt-5">
       <q-card class="rate-card" v-if="isLoggedIn">
         <q-card-section>
