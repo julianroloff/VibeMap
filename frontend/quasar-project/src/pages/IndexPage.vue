@@ -237,15 +237,15 @@ export default {
         }
       });
 
-      var heatmap1 = new window.google.maps.visualization.HeatmapLayer({
-        data: stressLevel1,
-        //dissipating: false,
-        radius: 50, // Adjust this value to make the heat points bigger or smaller
-        gradient: [
-          'rgba(255, 0, 0, 0)', // Transparent for no rating
-          'rgba(255, 0, 0, 0.8)',   // Red for low weight (rating 1)
-        ]
-      });
+        var heatmap1 = new window.google.maps.visualization.HeatmapLayer({
+          data: stressLevel1,
+          //dissipating: false,
+          radius: 50, // Adjust this value to make the heat points bigger or smaller
+          gradient: [
+            'rgba(255, 0, 0, 0)', // Transparent for no rating
+            'rgba(255, 0, 0, 0.8)',   // Red for low weight (rating 1)
+          ]
+        });
       var heatmap2 = new window.google.maps.visualization.HeatmapLayer({
         data: stressLevel2,
         //dissipating: false,
@@ -273,10 +273,18 @@ export default {
           'rgba(0, 255, 0, 0.8)'     // Green for high weight (rating 4)
         ]
       });
-      heatmap1.setMap(this.map);
-      heatmap2.setMap(this.map);
-      heatmap3.setMap(this.map);
-      heatmap4.setMap(this.map);
+      if  (this.highstress){
+        heatmap1.setMap(this.map);
+      }
+      if  (this.mediumstress){
+        heatmap2.setMap(this.map);
+      }
+      if  (this.nostress){
+        heatmap3.setMap(this.map);
+      }
+      if  (this.absnostress){
+        heatmap4.setMap(this.map);
+      }
     },
 
     loadDefaultLocation() {
@@ -291,12 +299,26 @@ export default {
   },
   setup () {
     const isLoggedIn = ref(true)
+    const constructionMarkings = ref(true);
+    const sportFacilities = ref(true);
+    const highstress = ref(true);
+    const mediumstress = ref(true);
+    const nostress = ref(true);
+    const absnostress = ref(true);
+    const nightMode = ref(false);
     // Check if the user is logged in by reading localStorage
     onMounted(() => {
       isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
       //console.log(profileEdit.value)
+      constructionMarkings.value = JSON.parse(localStorage.getItem("constructionMarkings")) || false;
+      sportFacilities.value = JSON.parse(localStorage.getItem("sportFacilities")) || false;
+      highstress.value = JSON.parse(localStorage.getItem("highstress")) || false;
+      mediumstress.value = JSON.parse(localStorage.getItem("mediumstress")) || false;
+      nostress.value = JSON.parse(localStorage.getItem("nostress")) || false;
+      absnostress.value = JSON.parse(localStorage.getItem("absnostress")) || false;
+      nightMode.value = JSON.parse(localStorage.getItem("nightMode")) || false;
     })
     return {
       ratingModel: ref(0),
@@ -307,7 +329,14 @@ export default {
         'sentiment_satisfied',
         'sentiment_very_satisfied'
       ],
-      isLoggedIn
+      isLoggedIn,
+      constructionMarkings,
+      sportFacilities,
+      nightMode,
+      highstress,
+      mediumstress,
+      nostress,
+      absnostress
     }
   }
 };
