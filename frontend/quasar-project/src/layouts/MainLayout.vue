@@ -153,7 +153,10 @@ export default {
 
     const userInfo = ref([
       { username: "Ágoston", email: "agoston@email.com", picture: "src/assets/agos-profile.jpeg", token: "password"},
-      //{ username: "Julian", email: "julian@email.com", picture: "src/assets/julian_profile.jpeg", token: ""}
+      { username: "Julian", email: "julian@email.com", picture: "src/assets/julian_profile.jpeg", token: "pass"},
+      { username: "Diemer", email: "diemer@email.com", picture: "src/assets/vibemap-logo.svg", token: "pass"},
+      { username: "Eduardo", email: "eduardo@email.com", picture: "src/assets/vibemap-logo.svg", token: "pass"},
+      { username: "Jippe", email: "jippe@email.com", picture: "src/assets/vibemap-logo.svg", token: "pass"}
     ]);
     const storedEmail = userInfo.value[0].email
     const storedPassword = userInfo.value[0].token

@@ -92,7 +92,8 @@ export default {
         scaleControl: false,
         streetViewControl: false,
         rotateControl: false,
-        fullscreenControl: false
+        fullscreenControl: false,
+        gestureHandling: 'greedy'
       });
       this.loadHeatmap();
       this.trackUserLocation();
@@ -180,14 +181,16 @@ export default {
 
     loadHeatmap() {
       const globalresponse = [inject('response')];
-      //console.log(globalresponse[0]._rawValue);
-      const response = globalresponse[0]._rawValue;
+      console.log(globalresponse[0]._rawValue);
+      //const response = globalresponse[0]._rawValue;
+      const response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
+      console.log(response);
       const stressLevel1 = [];
       const stressLevel2 = [];
       const stressLevel3 = [];
       const stressLevel4 = [];
 
-      response.forEach(item => {
+      response._rawValue.forEach(item => {
         const data ={ 
           location: new window.google.maps.LatLng(item.latitude, item.longitude), 
           weight: item.stress_level 
@@ -265,22 +268,22 @@ export default {
       this.map.setZoom(12);
     },
     submitRating() {
-      console.log("Rating:", this.ratingModel);
-      console.log("Reason:", this.reason);
-      console.log("Location:", this.map.getCenter().toJSON());
+      //console.log("Rating:", this.ratingModel);
+      //console.log("Reason:", this.reason);
+      //console.log("Location:", this.map.getCenter().toJSON());
       var response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
       console.log(response);
-      const lastRowId = response.length > 0 ? response[response.length - 1].id : null;
-      response._rawValue.push({
+      const lastRowId = response._rawValue.length;
+      response._rawValue.unshift({
         id: lastRowId+1,
-        userId: localStorage.getItem("loggedInId"),
+        userId: Number(localStorage.getItem("loggedInId")),
         latitude: this.map.getCenter().lat(),
         longitude: this.map.getCenter().lng(),
         stress_level: this.ratingModel,
         comment: this.reason,
         geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
       });
-      response._value.push({
+      response._value.unshift({
         id: lastRowId,
         userId: localStorage.getItem("loggedInId"),
         latitude: this.map.getCenter().lat(),
@@ -296,6 +299,9 @@ export default {
       };
       refreshPage();*/
       //this.loadHeatmap();
+      this.ratingModel = 0;
+      this.reason = "";
+
     }
   },
   setup () {

@@ -39,8 +39,11 @@ export default {
       { date: '17-02-2025', value: 3, reason: 'meh.', lat: 52.377956, long: 4.897070 }
     ]);
     const globalresponse = [inject('response')];
-    //console.log(globalresponse[0]._rawValue);
-    const responses = globalresponse[0]._rawValue;
+    console.log(globalresponse[0]._rawValue);
+    //const responses = globalresponse[0]._rawValue;
+    const response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
+    const responses = response._rawValue;
+    console.log(responses); 
     const loggedInId = ref("")
     const mapElements = ref([]);
 
