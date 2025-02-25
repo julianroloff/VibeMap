@@ -1,0 +1,5 @@
+INFO:     Will watch for changes in these directories: ['/Users/julian/Desktop/Master UvA/Semester 2/Societal Complexity and Designing with Data/VibeMap Project/services/ml-service']
+INFO:     Uvicorn running on http://127.0.0.1:8004 (Press CTRL+C to quit)
+INFO:     Started reloader process [41905] using WatchFiles
+ERROR:    Error loading ASGI app. Attribute "app" not found in module "main".
+INFO:     Stopping reloader process [41905]
