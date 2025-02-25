@@ -6,5 +6,23 @@ bcrypt
 pydantic
 pyjwt
 
-#Starting this service:
-#uvicorn main:app --reload --host 0.0.0.0 --port 8001
+Starting this service:
+uvicorn main:app --reload --host 0.0.0.0 --port 8001
+
+
+
+
+Command to Register a new user locally:
+
+curl -X POST "http://localhost:8001/auth/register" -H "Content-Type: application/json" -d '{
+    "email": "test@example.com",
+    "password": "testpassword"
+}' 
+
+
+Command to Login a User:
+
+curl -X POST "http://localhost:8001/auth/login" -H "Content-Type: application/json" -d '{   
+    "email": "test2@example.com",
+    "password": "testpassword"
+}'
