@@ -51,7 +51,7 @@ export default {
       loggedInId.value = Number(localStorage.getItem("loggedInId"));
       setTimeout(() => {
         loadGoogleMaps();
-      }, 100 );
+      }, 1);
     });
 
     function loadGoogleMaps() {
@@ -70,7 +70,7 @@ export default {
 
     function initMaps() {
       mapElements.value.forEach((mapElement, index) => {
-        const response = responses.value.filter(r => r.userId === loggedInId.value)[index]; // Get corresponding rating data
+        const response = responses[index]; // Get corresponding rating data
 
         const map = new window.google.maps.Map(mapElement, {
           center: { lat: response.latitude, lng: response.longitude },
