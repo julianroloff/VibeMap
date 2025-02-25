@@ -39,8 +39,11 @@ export default {
       { date: '17-02-2025', value: 3, reason: 'meh.', lat: 52.377956, long: 4.897070 }
     ]);
     const globalresponse = [inject('response')];
-    //console.log(globalresponse[0]._rawValue);
-    const responses = globalresponse[0]._rawValue;
+    console.log(globalresponse[0]._rawValue);
+    //const responses = globalresponse[0]._rawValue;
+    const response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
+    const responses = response._rawValue;
+    console.log(responses); 
     const loggedInId = ref("")
     const mapElements = ref([]);
 
@@ -48,7 +51,7 @@ export default {
       loggedInId.value = Number(localStorage.getItem("loggedInId"));
       setTimeout(() => {
         loadGoogleMaps();
-      }, 1);
+      }, 100 );
     });
 
     function loadGoogleMaps() {
@@ -67,7 +70,7 @@ export default {
 
     function initMaps() {
       mapElements.value.forEach((mapElement, index) => {
-        const response = responses[index]; // Get corresponding rating data
+        const response = responses.value.filter(r => r.userId === loggedInId.value)[index]; // Get corresponding rating data
 
         const map = new window.google.maps.Map(mapElement, {
           center: { lat: response.latitude, lng: response.longitude },
