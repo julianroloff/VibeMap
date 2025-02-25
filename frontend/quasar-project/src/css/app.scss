@@ -23,6 +23,7 @@ html, body, #q-app {
 }
 .map-cont {
     height: calc(74vh - 55px / 2) !important;
+    position: relative;
 }
 .rate-cont {
     height: auto !important;
@@ -163,4 +164,13 @@ html, body, #q-app {
     right: 15px;
     bottom: 15px;
     font-size: 35px;
+}
+.recenter-btn {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    z-index: 0;
+    border-radius: 100%;
+    width: 60px;
+    height: 60px;
 }

@@ -3,7 +3,12 @@
   <q-page class="q-pa-none main-page">
     <div class="map-cont p-5 pb-5">
       <div id="map" class="google-map q-card"></div>
-      <!--div id="recenter-btn" @click="trackUserLocation()">Recenter</div-->
+      <q-btn 
+        class="recenter-btn" 
+        color="primary" 
+        icon="my_location" 
+        @click="recenterMap"
+      />
     </div>
     <div class="rate-cont p-5 pt-5">
       <q-card class="rate-card" v-if="isLoggedIn">
@@ -94,6 +99,7 @@ export default {
     },
 
     trackUserLocation() {
+      let firstUpdate = true;
       navigator.geolocation.watchPosition(
         (position) => {
           const userLocation = {
@@ -102,8 +108,11 @@ export default {
           };
 
           // Move map to user's location
-          this.map.setCenter(userLocation);
-          this.map.setZoom(15);
+          if (firstUpdate) {
+            this.map.setCenter(userLocation);
+            this.map.setZoom(15);
+            firstUpdate = false; // Disable further automatic recentering
+          }
 
           // If first time, create native location marker
           if (!this.userMarker) {
@@ -134,6 +143,39 @@ export default {
           maximumAge: 0,
         }
       );
+    },
+    recenterMap() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            this.map.setCenter(userLocation);
+            this.map.setZoom(15);
+            if (!this.userMarker) {
+              this.userMarker = new window.google.maps.Marker({
+                position: userLocation,
+                map: this.map,
+                icon: {
+                  path: window.google.maps.SymbolPath.CIRCLE,
+                  scale: 8, // Size of the dot
+                  fillColor: "#4285F4",
+                  fillOpacity: 1,
+                  strokeWeight: 2,
+                  strokeColor: "#ffffff",
+                },
+              });
+            }
+          },
+          () => {
+            console.error("Unable to retrieve location.");
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported.");
+      }
     },
 
     loadHeatmap() {
