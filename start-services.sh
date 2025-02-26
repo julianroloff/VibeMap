@@ -19,13 +19,35 @@ if ! command -v psql &>/dev/null; then
 fi
 
 echo "🔍 Checking if PostgreSQL is running..."
-if ! pg_isready -h localhost -p 5432 -U user1 > /dev/null 2>&1; then
+if ! pg_isready -q; then
     echo "⚠️ PostgreSQL is not running! Starting PostgreSQL..."
     brew services start postgresql
-    sleep 5  # Give it time to start
 else
     echo "✅ PostgreSQL is running."
 fi
+
+# Ensure PostgreSQL user exists
+echo "🔍 Checking if user 'user1' exists..."
+USER_EXISTS=$(psql -U postgres -tc "SELECT 1 FROM pg_roles WHERE rolname='user1'")
+if [[ -z "$USER_EXISTS" ]]; then
+    echo "⚠️ User 'user1' not found! Creating user..."
+    psql -U postgres -c "CREATE USER user1 WITH PASSWORD 'test'; ALTER ROLE user1 CREATEDB;"
+else
+    echo "✅ User 'user1' exists."
+fi
+
+# Ensure databases exist
+DBS=("users" "location_db" "apilocation_db")
+for DB in "${DBS[@]}"; do
+    echo "🔍 Checking if database '$DB' exists..."
+    DB_EXISTS=$(psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = '$DB'")
+    if [[ -z "$DB_EXISTS" ]]; then
+        echo "⚠️ Database '$DB' not found! Creating it..."
+        psql -U postgres -c "CREATE DATABASE $DB OWNER user1;"
+    else
+        echo "✅ Database '$DB' exists."
+    fi
+done
 
 echo "🔍 Checking for running services and stopping them first..."
 for port in {8001..8005}; do
@@ -42,31 +64,6 @@ echo "🚀 Starting all services..."
 SERVICES=("auth-service" "location-service" "heatmap-service" "ml-service" "external-api-fetcher")
 PORTS=(8001 8002 8003 8004 8005)
 
-# Function to initialize database tables asynchronously
-initialize_db() {
-    SERVICE_DIR=$1
-    echo "▶️ Ensuring database tables exist for $SERVICE_DIR..."
-    python3 - <<EOF
-import asyncio
-import sys
-from pathlib import Path
-
-sys.path.append(str(Path("$SERVICE_DIR").resolve()))
-try:
-    from dependencies import Base, engine
-
-    async def init_db():
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        print("✅ Database initialized for $SERVICE_DIR")
-
-    asyncio.run(init_db())
-
-except ImportError as e:
-    print(f"⚠️ Could not initialize database for $SERVICE_DIR: {e}")
-EOF
-}
-
 # Start each service
 for i in "${!SERVICES[@]}"; do
     SERVICE_DIR="services/${SERVICES[$i]}"
@@ -75,11 +72,6 @@ for i in "${!SERVICES[@]}"; do
     if [[ ! -d "$SERVICE_DIR" ]]; then
         echo "❌ Error: Directory $SERVICE_DIR not found! Skipping..."
         continue
-    fi
-
-    # Initialize DB tables correctly for async engines
-    if [[ "${SERVICES[$i]}" != "heatmap-service" ]]; then
-        initialize_db "$SERVICE_DIR"
     fi
 
     echo "▶️ Starting $SERVICE_DIR on port $PORT..."
