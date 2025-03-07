@@ -10,7 +10,7 @@ from sqlalchemy.future import select
 
 SECRET_KEY = "mysecretkey"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINTUES = 30
+ACCESS_TOKEN_EXPIRE_MINTUES = 120
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
