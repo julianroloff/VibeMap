@@ -5,7 +5,7 @@
       <template v-if="!isLoggedIn">
         <q-item class="q-pa-md column items-center w-100">
           <q-avatar size="72px">
-            <img src="../assets/vibemap-logo.svg" alt="User Avatar" />
+            <img src="/assets/vibemap-logo.svg" alt="User Avatar" />
           </q-avatar>
           <div class="q-mt-md text-h6">Welcome</div>
           <div class="text-caption text-grey">Please login or sign up</div>
@@ -30,7 +30,7 @@
       <template v-if="isLoggedIn">
           <q-item class="q-pa-md column items-center w-100" v-for="(userInfo, index) in userInfo" :key="index">
             <q-avatar size="160px">
-              <img :src=userInfo.picture alt="User Avatar" />
+              <img src="../assets/agos-profile.jpeg" alt="User Avatar" />
               <q-file class="picture-edit" v-model="profilePicture" filled accept="image/*" :max-files="1" @added="previewImage" v-if="profileEdit" />
               <q-icon class="picture-edit-icon" name="edit" v-if="profileEdit"/>
             </q-avatar>
@@ -67,8 +67,8 @@ import { ref, onMounted } from 'vue'
 export default {
   setup () {
     const userInfo = ref([
-      { username: "Ágoston", userId: 1, email: "agoston@email.com", picture: "src/assets/agos-profile.jpeg", token: "password"},
-      //{ username: "Julian", userId: 2, email: "julian@email.com", picture: "src/assets/julian_profile.jpeg", token: "pass"}
+      { username: "Ágoston", userId: 1, email: "agoston@email.com", picture: "../assets/agos-profile.jpeg", token: "password"},
+      //{ username: "Julian", userId: 2, email: "julian@email.com", picture: "../assets/julian_profile.jpeg", token: "pass"}
     ]);
     const isLoggedIn = ref(true)
     const loggedInId = ref("")

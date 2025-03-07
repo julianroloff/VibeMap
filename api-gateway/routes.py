@@ -11,7 +11,7 @@ HEATMAP_SERVICE_URL = "http://localhost:8003"
 ML_SERVICE_URL = "http://localhost:8004"
 EXTERNAL_API_FETCHER_URL = "http://localhost:8005"
 
-@router.get("/auth/{path:path}")
+@router.api_route("/auth/{path:path}", methods=["GET", "POST"])
 def proxy_auth(path: str):
     return requests.get(f"{AUTH_SERVICE_URL}/{path}").json()
 
