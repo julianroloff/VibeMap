@@ -38,7 +38,7 @@
         </q-list>
       </q-scroll-area>
       <div class="version-info text-caption text-grey text-center">
-        vibemap v0.1.2
+        vibemap v0.1.3
       </div>
     </q-drawer>
 

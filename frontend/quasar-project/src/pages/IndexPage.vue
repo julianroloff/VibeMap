@@ -319,12 +319,12 @@ export default {
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
       //console.log(profileEdit.value)
-      constructionMarkings.value = JSON.parse(localStorage.getItem("constructionMarkings")) || false;
-      sportFacilities.value = JSON.parse(localStorage.getItem("sportFacilities")) || false;
-      highstress.value = JSON.parse(localStorage.getItem("highstress")) || false;
-      mediumstress.value = JSON.parse(localStorage.getItem("mediumstress")) || false;
-      nostress.value = JSON.parse(localStorage.getItem("nostress")) || false;
-      absnostress.value = JSON.parse(localStorage.getItem("absnostress")) || false;
+      constructionMarkings.value = JSON.parse(localStorage.getItem("constructionMarkings")) || true;
+      sportFacilities.value = JSON.parse(localStorage.getItem("sportFacilities")) || true;
+      highstress.value = JSON.parse(localStorage.getItem("highstress")) || true;
+      mediumstress.value = JSON.parse(localStorage.getItem("mediumstress")) || true;
+      nostress.value = JSON.parse(localStorage.getItem("nostress")) || true;
+      absnostress.value = JSON.parse(localStorage.getItem("absnostress")) || true;
       nightMode.value = JSON.parse(localStorage.getItem("nightMode")) || false;
     })
     return {
