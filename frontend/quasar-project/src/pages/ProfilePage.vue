@@ -75,8 +75,8 @@ export default {
     const profileEdit = ref(false)
     const email = ref("")
     const password = ref("")
-    const storedEmail = userInfo.value[0].email
-    const storedPassword = userInfo.value[0].token
+    //const storedEmail = userInfo.value[0].email
+    //const storedPassword = userInfo.value[0].token
 
     // Check if the user is logged in by reading localStorage
     onMounted(() => {
@@ -89,24 +89,12 @@ export default {
 
     const login = async () => {
       if (email.value && password.value) {
-
-        //Remove the following check and enable the commented section when backend is connected!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if (email.value == storedEmail) {
-          if (password.value == storedPassword) {
-            isLoggedIn.value = true;
-            localStorage.setItem('isLoggedIn', 'true')
-            localStorage.setItem('loggedInId', Number(userInfo.value[0].userId))
-          }
-          else {
-            alert("Wrong password or email address Try again.")
-          }
-        }
-        /*const requestBody = {
+        const requestBody = {
           email: email.value,
           password: password.value
         };
         try {
-          const response = await fetch("http://localhost:8001/auth/register", {
+          const response = await fetch("https://vibemapbe.com/auth/auth/login", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -124,7 +112,7 @@ export default {
           }
         } catch (error) {
           console.error("Error during login", error);
-        }*/
+        }
       } else {
         console.error("Email and password are required");
       }

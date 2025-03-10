@@ -1,9 +1,12 @@
 server {
     listen 80;
-    server_name _;  # Accept connections on any IP, including your public IP
+    server_name vibemapbe.com;
 
+    # Redirect all HTTP requests to HTTPS
+    # return 301 https://$host$request_uri;
+    
     location /auth/ {
-        proxy_pass http://0.0.0.0:8000/auth/;
+        proxy_pass http://localhost:8001/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -11,30 +14,138 @@ server {
     }
 
     location /location/ {
-        proxy_pass http://0.0.0.0:8000/location/;
+        proxy_pass http://localhost:8002/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
     location /heatmap/ {
-        proxy_pass http://0.0.0.0:8000/heatmap/;
+        proxy_pass http://localhost:8003/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
     location /ml/ {
-        proxy_pass http://0.0.0.0:8000/ml/;
+        proxy_pass http://localhost:8004/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
     location /external/ {
-        proxy_pass http://0.0.0.0:8000/external/;
+        proxy_pass http://localhost:8005/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name vibemapbe.com;
+
+    # SSL Certificate Paths
+    ssl_certificate /etc/letsencrypt/live/vibemapbe.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/vibemapbe.com/privkey.pem;
+
+    # Security Options (adjust as needed)
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    # CORS Headers
+    # add_header 'Access-Control-Allow-Origin' '*';
+    # add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+    # add_header 'Access-Control-Allow-Headers' 'Content-Type';
+
+    add_header 'Access-Control-Allow-Origin' 'https://agoreischl.github.io' always;
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS' always;
+    add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization' always;
+    add_header 'Access-Control-Allow-Credentials' 'true' always;
+
+    location /auth/ {
+        # Handle preflight requests (OPTIONS)
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' 'https://agoreischl.github.io';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization';
+            add_header 'Access-Control-Max-Age' 1728000;  # Cache preflight response for 20 days
+            return 204;
+        }
+        proxy_pass http://localhost:8001/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /location/ {
+        # Handle preflight requests (OPTIONS)
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' 'https://agoreischl.github.io';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization';
+            add_header 'Access-Control-Max-Age' 1728000;  # Cache preflight response for 20 days
+            return 204;
+        }
+        proxy_pass http://localhost:8002/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /heatmap/ {
+        # Handle preflight requests (OPTIONS)
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' 'https://agoreischl.github.io';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization';
+            add_header 'Access-Control-Max-Age' 1728000;  # Cache preflight response for 20 days
+            return 204;
+        }
+        proxy_pass http://localhost:8003/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /ml/ {
+        # Handle preflight requests (OPTIONS)
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' 'https://agoreischl.github.io';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization';
+            add_header 'Access-Control-Max-Age' 1728000;  # Cache preflight response for 20 days
+            return 204;
+        }
+        proxy_pass http://localhost:8004/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /external/ {
+        # Handle preflight requests (OPTIONS)
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' 'https://agoreischl.github.io';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization';
+            add_header 'Access-Control-Max-Age' 1728000;  # Cache preflight response for 20 days
+            return 204;
+        }
+        proxy_pass http://localhost:8005/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
