@@ -75,6 +75,7 @@ export default {
     const profileEdit = ref(false)
     const email = ref("")
     const password = ref("")
+    const usertoken = ref("")
     //const storedEmail = userInfo.value[0].email
     //const storedPassword = userInfo.value[0].token
 
@@ -82,6 +83,7 @@ export default {
     onMounted(() => {
       isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
       loggedInId.value = localStorage.getItem("loggedInId");
+      usertoken.value = localStorage.getItem("usertoken");
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
       //console.log(profileEdit.value)
@@ -107,14 +109,20 @@ export default {
             localStorage.setItem('isLoggedIn', 'true')
             const data = await response.json();
             console.log(data); 
+            usertoken.value = data.access_token;
+            localStorage.setItem('usertoken', data.access_token)
+            this.$router.push('/');
+            alert("Login successful! Welcome back " + email.value);
           } else {
             console.error("Login failed", response.responseText);
+            alert("Login failed", response.responseText);
           }
         } catch (error) {
           console.error("Error during login", error);
         }
       } else {
         console.error("Email and password are required");
+        alert("Email and password are required");
       }
     };
 

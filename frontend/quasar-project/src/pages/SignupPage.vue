@@ -20,6 +20,7 @@
           filled
           accept="image/*"
           :max-files="1"
+          @update:model-value="handleFileUpload"
           @added="previewImage"
         />
 
@@ -100,6 +101,27 @@ const imageUrl = ref(null);
 // Computed property to check if passwords match
 const passwordMismatch = computed(() => password.value !== passwordConfirm.value);
 
+
+const handleFileUpload = (profilePicture) => {
+  if (profilePicture) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // Set the Base64 string as the image source
+      imageUrl.value = e.target.result;
+    };
+    reader.readAsDataURL(file); // Convert the file to Base64
+  } else {
+    imageUrl.value = ''; // Clear the image if no file is selected
+  }
+};
+
+const saveToLocalStorage = () => {
+  if (imageBase64.value) {
+    localStorage.setItem('uploadedImage', imageBase64.value);
+    console.log('Image saved to local storage.');
+  }
+};
+
 const submitForm = () => {
   if (passwordMismatch.value) {
     return; // Stop form submission if passwords do not match
@@ -121,6 +143,7 @@ const submitForm = () => {
     //username: username.value,
     //termsAccepted: termsAccepted.value,
     //profilePicture: profilePicture.value,
+    //profilePicture: imageUrl.value,
   };
 
   fetch('https://vibemapbe.com/auth/auth/register', {
@@ -134,10 +157,13 @@ const submitForm = () => {
   .then(data => {
     // Handle successful signup
     console.log('Signup successful:', data);
+    this.$router.push('/');
+    saveToLocalStorage();
   })
   .catch(error => {
     // Handle signup error
     console.error('Signup error:', error);
+    alert('Signup failed. Please try again. Error: ' + error);
   });
 };
 
@@ -151,5 +177,20 @@ const previewImage = () => {
     };
     reader.readAsDataURL(file); // Convert the file to a base64 string
   }
+};
+
+return {
+  email,
+  password,
+  passwordConfirm,
+  username,
+  termsAccepted,
+  profilePicture,
+  imageUrl,
+  passwordMismatch,
+  handleFileUpload,
+  saveToLocalStorage,
+  submitForm,
+  previewImage,
 };
 </script>
