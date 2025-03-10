@@ -5,6 +5,7 @@ class LocationCreate(BaseModel):
     latitude: float
     longitude: float
     stress_level: float
+    comment: Optional[str]
 
 class LocationResponse(LocationCreate):
     id:int
