@@ -109,15 +109,20 @@ const handleFileUpload = (profilePicture) => {
       // Set the Base64 string as the image source
       imageUrl.value = e.target.result;
     };
-    reader.readAsDataURL(file); // Convert the file to Base64
+    reader.readAsDataURL(imageUrl); // Convert the file to Base64
   } else {
     imageUrl.value = ''; // Clear the image if no file is selected
   }
+  return {
+    profilePicture,
+    imageUrl,
+    handleFileUpload,
+  };
 };
 
 const saveToLocalStorage = () => {
-  if (imageBase64.value) {
-    localStorage.setItem('uploadedImage', imageBase64.value);
+  if (imageUrl.value) {
+    localStorage.setItem('uploadedImage', imageUrl.value);
     console.log('Image saved to local storage.');
   }
 };
@@ -179,18 +184,4 @@ const previewImage = () => {
   }
 };
 
-return {
-  email,
-  password,
-  passwordConfirm,
-  username,
-  termsAccepted,
-  profilePicture,
-  imageUrl,
-  passwordMismatch,
-  handleFileUpload,
-  saveToLocalStorage,
-  submitForm,
-  previewImage,
-};
 </script>
