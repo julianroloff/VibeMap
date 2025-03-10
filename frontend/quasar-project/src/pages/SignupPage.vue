@@ -117,13 +117,13 @@ const submitForm = () => {
   var signupData = {
     email: email.value,
     password: password.value,
-    passwordConfirm: passwordConfirm.value,
-    username: username.value,
-    termsAccepted: termsAccepted.value,
-    profilePicture: profilePicture.value,
+    //passwordConfirm: passwordConfirm.value,
+    //username: username.value,
+    //termsAccepted: termsAccepted.value,
+    //profilePicture: profilePicture.value,
   };
 
-  fetch('/auth/register', {
+  fetch('https://vibemapbe.com/auth/auth/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

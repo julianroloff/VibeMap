@@ -5,7 +5,7 @@
       <template v-if="!isLoggedIn">
         <q-item class="q-pa-md column items-center w-100">
           <q-avatar size="72px">
-            <img src="/assets/vibemap-logo.svg" alt="User Avatar" />
+            <img src="../assets/vibemap-logo.svg" alt="User Avatar" />
           </q-avatar>
           <div class="q-mt-md text-h6">Welcome</div>
           <div class="text-caption text-grey">Please login or sign up</div>
@@ -108,7 +108,7 @@ export default {
             const data = await response.json();
             console.log(data); 
           } else {
-            console.error("Login failed", response.statusText);
+            console.error("Login failed", response.responseText);
           }
         } catch (error) {
           console.error("Error during login", error);
