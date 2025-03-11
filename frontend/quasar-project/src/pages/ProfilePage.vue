@@ -113,6 +113,7 @@ export default {
           userId: data.id, // Update userId from API
           token: token, // Update token from API
         };
+        console.log(userInfo.value[0]);
       } catch (err) {
         error.value = err.message || 'Failed to fetch user data';
       }
