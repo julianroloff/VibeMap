@@ -53,11 +53,11 @@ export default {
     const usertoken = ref("")
 
     onMounted(() => {
-      loggedInId.value = Number(localStorage.getItem("loggedInId"));
       setTimeout(() => {
         loadGoogleMaps();
       }, 1);
       usertoken.value = localStorage.getItem("usertoken");
+      loggedInId.value = Number(localStorage.getItem("loggedInId"));
       fetchUserData(usertoken.value);
     });
 
@@ -83,6 +83,7 @@ export default {
           userId: data.id, // Update userId from API
           token: token, // Update token from API
         };
+        localStorage.setItem("loggedInId", userInfo.value[0].userId);
         console.log(userInfo.value[0]);
       } catch (err) {
         error.value = err.message || 'Failed to fetch user data';
