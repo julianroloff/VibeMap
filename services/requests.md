@@ -26,7 +26,21 @@ curl -X POST "https://vibemapbe.com/auth/auth/login" -H "Content-Type: applicati
 
 ##request:
 curl -X GET "https://vibemapbe.com/auth/auth/me" \
-     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZ29AbWFpbC5jb20iLCJ1c2VyX2lkIjoyLCJleHAiOjE3NDE1MzE1MDN9.H2WMliHsnTt1t4GVTEhBK_VWdoQoofwWOgS7UKfQTLs"
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZ29zdG9uQGVtYWlsLmNvbSIsInVzZXJfaWQiOjQsImV4cCI6MTc0MTY5NDc1N30.gm1o3C72_YLL7GH3ABuwPhWbt8jHi15SQvqa8w9ngCI"
 
 ##response:
 {"email":"ago@mail.com","id":2}
+
+
+
+What I would need:
+- Store the profile picture as base64 with all the user data (big ass string), during signup I will send 
+	- name
+	- email
+	- password
+	- profile pic (as a string)
+- using the auth/me request return every user data:
+    - name
+    - email
+    - id 
+    - profile pic

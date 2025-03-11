@@ -89,6 +89,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const email = ref('');
 const password = ref('');
@@ -97,10 +98,12 @@ const username = ref('');
 const termsAccepted = ref(false);
 const profilePicture = ref(null);
 const imageUrl = ref(null);
+const result = "";
 
 // Computed property to check if passwords match
 const passwordMismatch = computed(() => password.value !== passwordConfirm.value);
 
+const router = useRouter();
 
 const handleFileUpload = (profilePicture) => {
   if (profilePicture) {
@@ -160,10 +163,16 @@ const submitForm = () => {
   })
   .then(response => response.json())
   .then(data => {
-    // Handle successful signup
-    console.log('Signup successful:', data);
-    this.$router.push('/');
-    saveToLocalStorage();
+    if(result.status != 200){
+      alert(data);
+      router.push('/profile');
+    }
+    else{
+      // Handle successful signup
+      console.log('Signup successful:', data);
+      router.push('/');
+      saveToLocalStorage();
+    }
   })
   .catch(error => {
     // Handle signup error
