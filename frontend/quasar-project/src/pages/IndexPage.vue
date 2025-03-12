@@ -361,41 +361,76 @@ export default {
       this.map.setCenter(defaultLocation);
       this.map.setZoom(12);
     },
-    submitRating() {
+    async submitRating() {
       //console.log("Rating:", this.ratingModel);
       //console.log("Reason:", this.reason);
       //console.log("Location:", this.map.getCenter().toJSON());
-      var response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
-      console.log(response);
-      const lastRowId = response._rawValue.length;
-      response._rawValue.unshift({
-        id: lastRowId+1,
-        userId: Number(localStorage.getItem("loggedInId")),
-        latitude: this.map.getCenter().lat(),
-        longitude: this.map.getCenter().lng(),
-        stress_level: this.ratingModel,
-        comment: this.reason,
-        geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
-      });
-      response._value.unshift({
-        id: lastRowId,
-        userId: localStorage.getItem("loggedInId"),
-        latitude: this.map.getCenter().lat(),
-        longitude: this.map.getCenter().lng(),
-        stress_level: this.ratingModel,
-        comment: this.reason,
-        geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
-      });
-      localStorage.setItem("response", JSON.stringify(response));
-      console.log(response);
+      //var response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
+      //console.log(response);
+      //const lastRowId = response._rawValue.length;
+      //response._rawValue.unshift({
+      //  id: lastRowId+1,
+      //  userId: Number(localStorage.getItem("loggedInId")),
+      //  latitude: this.map.getCenter().lat(),
+      //  longitude: this.map.getCenter().lng(),
+      //  stress_level: this.ratingModel,
+      //  comment: this.reason,
+      //  geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
+      //});
+      //response._value.unshift({
+      //  id: lastRowId,
+      //  userId: localStorage.getItem("loggedInId"),
+      //  latitude: this.map.getCenter().lat(),
+      //  longitude: this.map.getCenter().lng(),
+      //  stress_level: this.ratingModel,
+      //  comment: this.reason,
+      //  geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
+      //});
+      //localStorage.setItem("response", JSON.stringify(response));
+      //console.log(response);
       /*const refreshPage = () => {
         location.reload(); // Reloads the current page
       };
       refreshPage();*/
       //this.loadHeatmap();
-      this.ratingModel = 0;
-      this.reason = "";
+      // Prepare the data for the POST request
+      const token = localStorage.getItem("usertoken");
+      const ratingData = {
+        latitude: position.coords.latitude, // Use the map's center latitude
+        longitude: position.coords.longitude, // Use the map's center longitude
+        comment: this.reason, // Use the reason entered by the user
+        stress_level: this.ratingModel, // Use the selected rating
+      };
+      try {
+        // Send the POST request to the API
+        const response = await fetch("https://vibemapbe.com/location/location/locations/", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(ratingData),
+        });
 
+        // Check if the request was successful
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Parse the response
+        const data = await response.json();
+        console.log("Review submitted successfully:", data);
+
+        // Optionally, update the local storage or reload the heatmap
+        this.loadHeatmap(); // Reload the heatmap to reflect the new review
+      } catch (error) {
+        console.error("Error submitting review:", error);
+        alert("Failed to submit review. Please try again.");
+      } finally {
+        // Reset the form
+        this.ratingModel = 0;
+        this.reason = "";
+      }
     }
   },
   setup () {
