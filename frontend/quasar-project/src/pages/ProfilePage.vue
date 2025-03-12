@@ -104,7 +104,7 @@ export default {
         });
 
         if (!response.ok) {
-          if (response.status === 401) {
+          if (response.status === 401 && isLoggedIn.value) {
             // Unauthorized
             console.error('User is not logged in');
             alert('User is not logged in, or the session expired. Please log in again.');
@@ -112,7 +112,7 @@ export default {
             localStorage.setItem('isLoggedIn', 'false')
             localStorage.setItem('loggedInId', null)
             localStorage.setItem('usertoken', null)
-            router.push('/login');
+            router.push('/profile');
             return;
           }
           throw new Error(`HTTP error! Status: ${response.status}`);
