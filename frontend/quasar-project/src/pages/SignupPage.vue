@@ -105,7 +105,7 @@ const passwordMismatch = computed(() => password.value !== passwordConfirm.value
 const router = useRouter();
 
 // Function to resize and compress the image
-const resizeImage = (file, maxWidth = 180, maxHeight = 180, maxSizeInKB = 500) => {
+const resizeImage = (file, maxWidth = 180, maxHeight = 180, maxSizeInKB = 40) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -236,7 +236,7 @@ const submitForm = () => {
     username: username.value,
     //termsAccepted: termsAccepted.value,
     //profilePicture: profilePicture.value,
-    profilePicture: imageUrl.value,
+    //profilePicture: imageUrl.value,
   };
 
   fetch('https://vibemapbe.com/auth/auth/register', {

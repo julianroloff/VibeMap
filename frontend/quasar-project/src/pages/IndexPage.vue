@@ -258,11 +258,27 @@ export default {
       }
     },
 
-    loadHeatmap() {
+    async loadHeatmap() {
       const globalresponse = [inject('response')];
       console.log(globalresponse[0]._rawValue);
       //const response = globalresponse[0]._rawValue;
-      const response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
+      var response = [];
+
+      try {
+        // Fetch data from the API
+        response = await fetch("https://vibemapbe.com/location/location/locations/");
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const apiData = await response.json(); // Parse the JSON response
+        response = apiData;
+        console.log(response);
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+        response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
+      }
+
       console.log(response);
       const stressLevel1 = [];
       const stressLevel2 = [];
