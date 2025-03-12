@@ -44,3 +44,7 @@ What I would need:
     - email
     - id 
     - profile pic
+
+#locations
+##get locations:
+
