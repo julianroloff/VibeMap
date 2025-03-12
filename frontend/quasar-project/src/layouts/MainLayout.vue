@@ -3,13 +3,13 @@
 
     <q-header elevated class="bg-transparent text-primary overflow-hidden p-5 pb-5">
       <q-toolbar class="q-card">
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer"/>
 
-        <q-toolbar-title class="text-center font-karla fw-600">
+        <q-toolbar-title class="text-center font-karla fw-600" @clcik="goHome">
           <q-avatar>
-            <img src="../assets/vibemap-logo.svg" alt="VibeMap Logo" />
+            <img src="../assets/vibemap-logo.svg" alt="VibeMap Logo" @clcik="goHome"/>
           </q-avatar>
-          vibemap
+          <q-btn dense flat round @click="goHome" class="font-karla logotext">vibemap</q-btn>
         </q-toolbar-title>
 
         <q-btn dense flat round icon="person" @click="toggleRightDrawer" />
@@ -54,7 +54,7 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import ProfilePage from 'pages/ProfilePage.vue' // Adjust the path as necessary
 
 export default {
@@ -69,6 +69,7 @@ export default {
     const email = ref("")
     const password = ref("")
     const route = useRoute()  // Access the current route
+    const router = useRouter() 
     const nightMode = ref(false);
 
     const menuList = [
@@ -91,6 +92,10 @@ export default {
       //console.log(isLoggedIn.value);
     })
 
+    const goHome = () => {
+        router.push("/")
+    }
+
     // Function to determine if a menu item is active
     const isActive = (menuItem) => {
       return route.path === menuItem.to
@@ -112,7 +117,8 @@ export default {
       },
       toggleRightDrawer() {
         rightDrawerOpen.value = !rightDrawerOpen.value
-      }
+      },
+      goHome
     }
   }
 }
