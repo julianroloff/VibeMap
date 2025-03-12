@@ -111,7 +111,8 @@
 </template>
 
 <script>
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted } from 'vue'
+//import { inject } from 'vue'
 //import { getModuleURL } from 'workbox-build';
 
 
@@ -259,8 +260,8 @@ export default {
     },
 
     async loadHeatmap() {
-      const globalresponse = [inject('response')];
-      console.log(globalresponse[0]._rawValue);
+      //const globalresponse = [inject('response')];
+      //console.log(globalresponse[0]._rawValue);
       //const response = globalresponse[0]._rawValue;
       var response = [];
 
@@ -276,7 +277,7 @@ export default {
       }
       catch (error) {
         console.error('Error fetching data:', error);
-        response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
+        //response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
       }
 
       console.log(response);

@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { provide, ref } from 'vue';
+/*import { provide, ref } from 'vue';
 
 
 const response = ref ([
@@ -862,6 +862,6 @@ provide('response', response);
 
 if (!localStorage.getItem('response') || localStorage.getItem('response') === "[]") {
   localStorage.setItem('response', JSON.stringify(response));
-}
+}*/
 
 </script>
