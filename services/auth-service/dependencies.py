@@ -42,7 +42,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
-    from models import User  # ✅ Import inside function to avoid circular dependency
+    from models import User 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

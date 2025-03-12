@@ -18,7 +18,10 @@ async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
 
     # Hash password before storing
     hashed_password = pwd_context.hash(user.password)
-    new_user = User(email=user.email, password=hashed_password)
+    new_user = User(username = user.username,
+                    email=user.email, 
+                    password=hashed_password,
+                    profile_picture=user.profile_picture)
 
     db.add(new_user)
     await db.commit()
