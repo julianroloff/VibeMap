@@ -395,9 +395,21 @@ export default {
       //this.loadHeatmap();
       // Prepare the data for the POST request
       const token = localStorage.getItem("usertoken");
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            this.map.setCenter(userLocation);
+          }
+        );
+      }
+
       const ratingData = {
-        latitude: position.coords.latitude, // Use the map's center latitude
-        longitude: position.coords.longitude, // Use the map's center longitude
+        latitude: this.map.userLocation.lat(), 
+        longitude: this.map.userLocation.lng(), 
         comment: this.reason, // Use the reason entered by the user
         stress_level: this.ratingModel, // Use the selected rating
       };
