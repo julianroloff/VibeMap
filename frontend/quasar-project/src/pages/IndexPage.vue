@@ -291,19 +291,17 @@ export default {
           weight: item.stress_level 
         };
         
-        switch (item.stress_level) {
-          case 1:
-            stressLevel1.push(data);
-            break;
-          case 2:
-            stressLevel2.push(data);
-            break;
-          case 3:
-            stressLevel3.push(data);
-            break;
-          case 4:
-            stressLevel4.push(data);
-            break;
+        // Categorize data based on stress level ranges
+        if (item.stress_level >= 0.5 && item.stress_level < 1.5) {
+          stressLevel1.push(data);
+        } else if (item.stress_level >= 1.5 && item.stress_level < 2.5) {
+          stressLevel2.push(data);
+        } else if (item.stress_level >= 2.5 && item.stress_level < 3.5) {
+          stressLevel3.push(data);
+        } else if (item.stress_level >= 3.5 && item.stress_level <= 4.5) {
+          stressLevel4.push(data);
+        } else {
+          console.error("Invalid stress level:", item.stress_level);
         }
       });
 
