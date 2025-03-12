@@ -105,14 +105,84 @@ const passwordMismatch = computed(() => password.value !== passwordConfirm.value
 
 const router = useRouter();
 
-const handleFileUpload = (profilePicture) => {
-  if (profilePicture) {
+// Function to resize and compress the image
+const resizeImage = (file, maxWidth = 180, maxHeight = 180, quality = 0.8) => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      // Set the Base64 string as the image source
-      imageUrl.value = e.target.result;
+      const img = new Image();
+      img.src = e.target.result;
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Calculate new dimensions while maintaining aspect ratio
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        // Set canvas dimensions
+        canvas.width = width;
+        canvas.height = height;
+
+        // Draw the image on the canvas
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert the canvas to a base64 image with reduced quality
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error('Failed to resize image.'));
+              return;
+            }
+            resolve(blob);
+          },
+          'image/jpeg', // You can change this to 'image/png' if needed
+          quality // Quality parameter (0.8 = 80% quality)
+        );
+      };
+
+      img.onerror = (error) => {
+        reject(error);
+      };
     };
-    reader.readAsDataURL(profilePicture); // Convert the file to Base64
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
+
+    reader.readAsDataURL(file); // Read the file as a data URL
+  });
+};
+
+const handleFileUpload = async (profilePicture) => {
+  if (profilePicture) {
+    try {
+      // Resize the image to 180x180 pixels and reduce quality
+      const resizedImage = await resizeImage(profilePicture);
+
+      // Convert the resized image blob to a base64 URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imageUrl.value = e.target.result; // Set the resized image URL
+      };
+      reader.readAsDataURL(resizedImage);
+    } catch (error) {
+      console.error('Error resizing image:', error);
+      alert('Failed to resize image. Please try again.');
+    }
   } else {
     imageUrl.value = ''; // Clear the image if no file is selected
   }
