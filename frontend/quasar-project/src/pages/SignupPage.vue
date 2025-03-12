@@ -98,7 +98,7 @@ const username = ref('');
 const termsAccepted = ref(false);
 const profilePicture = ref(null);
 const imageUrl = ref(null);
-const result = "";
+const response = "";
 
 // Computed property to check if passwords match
 const passwordMismatch = computed(() => password.value !== passwordConfirm.value);
@@ -112,15 +112,10 @@ const handleFileUpload = (profilePicture) => {
       // Set the Base64 string as the image source
       imageUrl.value = e.target.result;
     };
-    reader.readAsDataURL(imageUrl); // Convert the file to Base64
+    reader.readAsDataURL(profilePicture); // Convert the file to Base64
   } else {
     imageUrl.value = ''; // Clear the image if no file is selected
   }
-  return {
-    profilePicture,
-    imageUrl,
-    handleFileUpload,
-  };
 };
 
 const saveToLocalStorage = () => {
@@ -163,7 +158,7 @@ const submitForm = () => {
   })
   .then(response => response.json())
   .then(data => {
-    if(result.status != 200){
+    if(response.status != 200){
       alert(data);
       router.push('/profile');
     }
@@ -182,15 +177,15 @@ const submitForm = () => {
 };
 
 // Function to preview the image
-const previewImage = () => {
-  const file = profilePicture.value?.[0]; // Get the first file from the array
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      imageUrl.value = e.target.result; // Set the result as the image URL
-    };
-    reader.readAsDataURL(file); // Convert the file to a base64 string
-  }
-};
+//const previewImage = () => {
+//  const file = profilePicture.value; // Get the first file from the array
+//  if (file) {
+//    const reader = new FileReader();
+//    reader.onload = (e) => {
+//      imageUrl.value = e.target.result; // Set the result as the image URL
+//    };
+//    reader.readAsDataURL(file); // Convert the file to a base64 string
+//  }
+//};
 
 </script>

@@ -75,6 +75,7 @@ export default {
     const loggedInId = ref("")
     const profileEdit = ref(false)
     const email = ref("")
+    const username = ref("");
     const password = ref("")
     const usertoken = ref("")
     const router = useRouter();
@@ -86,6 +87,7 @@ export default {
       isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
       loggedInId.value = localStorage.getItem("loggedInId");
       usertoken.value = localStorage.getItem("usertoken");
+      username.value = localStorage.getItem("username");
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
       //console.log(profileEdit.value)
@@ -112,6 +114,7 @@ export default {
             localStorage.setItem('isLoggedIn', 'false')
             localStorage.setItem('loggedInId', null)
             localStorage.setItem('usertoken', null)
+            localStorage.setItem('username', null)
             router.push('/profile');
             return;
           }
@@ -156,8 +159,10 @@ export default {
             //console.log(data); 
             usertoken.value = data.access_token;
             localStorage.setItem('usertoken', data.access_token)
+            username.value = data.username;
+            localStorage.setItem('username', username.value)
             router.push('/');
-            alert("Login successful! Welcome back " + email.value);
+            alert("Login successful! Welcome back " + username.value);
           } else {
             console.error("Login failed", response.responseText);
             alert("Login failed", response.responseText);
@@ -176,6 +181,7 @@ export default {
       localStorage.setItem('isLoggedIn', 'false')
       localStorage.setItem('loggedInId', null)
       email.value = "";
+      username.value = "";
       password.value = "";
       refreshPage();
     };
