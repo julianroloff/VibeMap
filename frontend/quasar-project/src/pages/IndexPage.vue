@@ -285,7 +285,7 @@ export default {
       const stressLevel3 = [];
       const stressLevel4 = [];
 
-      response._rawValue.forEach(item => {
+      response.forEach(item => {
         const data ={ 
           location: new window.google.maps.LatLng(item.latitude, item.longitude), 
           weight: item.stress_level 
