@@ -21,6 +21,7 @@ async def add_location(
         latitude = location.latitude,
         longitude = location.longitude,
         stress_level = location.stress_level,
+        comment = location.comment,
         geom = ST_Point(location.longitude, location.latitude)
     )
     db.add(new_location)
