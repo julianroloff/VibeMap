@@ -63,6 +63,7 @@
 
 <script>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router';
 
 export default {
   setup () {
@@ -76,6 +77,7 @@ export default {
     const email = ref("")
     const password = ref("")
     const usertoken = ref("")
+    const router = useRouter();
     //const storedEmail = userInfo.value[0].email
     //const storedPassword = userInfo.value[0].token
 
@@ -85,14 +87,14 @@ export default {
       loggedInId.value = localStorage.getItem("loggedInId");
       usertoken.value = localStorage.getItem("usertoken");
       //localStorage.setItem("isLoggedIn", "true") 
-      console.log(isLoggedIn.value);
+      //console.log(isLoggedIn.value);
       //console.log(profileEdit.value)
-      console.log(usertoken.value);
+      //console.log(usertoken.value);
       fetchUserData(usertoken.value);
     })
 
     const fetchUserData = async (token) => {
-      console.log(token)
+      //console.log(token)
       try {
         const response = await fetch('https://vibemapbe.com/auth/auth/me', {
           method: 'GET',
@@ -102,6 +104,17 @@ export default {
         });
 
         if (!response.ok) {
+          if (response.status === 401) {
+            // Unauthorized
+            console.error('User is not logged in');
+            alert('User is not logged in, or the session expired. Please log in again.');
+            isLoggedIn.value = false;
+            localStorage.setItem('isLoggedIn', 'false')
+            localStorage.setItem('loggedInId', null)
+            localStorage.setItem('usertoken', null)
+            router.push('/login');
+            return;
+          }
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
@@ -113,21 +126,9 @@ export default {
           userId: data.id, // Update userId from API
           token: token, // Update token from API
         };
-        console.log(userInfo.value[0]);
+        //console.log(userInfo.value[0]);
         localStorage.setItem("loggedInId", userInfo.value[0].userId);
       } catch (err) {
-        if (err.code === 401) {
-          // Unauthorized
-          console.error('User is not logged in');
-          alert('User is not logged in, or the session expired. Please log in again.');
-          isLoggedIn.value = false;
-          localStorage.setItem('isLoggedIn', 'false')
-          localStorage.setItem('loggedInId', null)
-          localStorage.setItem('usertoken', null)
-          this.$router.push('/login');
-        } else {
-          error.value = err.message || 'Failed to fetch user data';
-        }
         error.value = err.message || 'Failed to fetch user data';
       }
     };
@@ -151,10 +152,10 @@ export default {
             isLoggedIn.value = true;
             localStorage.setItem('isLoggedIn', 'true')
             const data = await response.json();
-            console.log(data); 
+            //console.log(data); 
             usertoken.value = data.access_token;
             localStorage.setItem('usertoken', data.access_token)
-            this.$router.push('/');
+            router.push('/');
             alert("Login successful! Welcome back " + email.value);
           } else {
             console.error("Login failed", response.responseText);
