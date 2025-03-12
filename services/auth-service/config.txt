@@ -8,7 +8,8 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8001
 Command to Register a new user locally:
 
 curl -X POST "http://localhost:8001/auth/register" -H "Content-Type: application/json" -d '{
-    "email": "test@example.com",
+    "username": "test",
+    "email": "newUser@example.com",
     "password": "testpassword"
 }' 
 

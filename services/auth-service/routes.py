@@ -18,7 +18,10 @@ async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
 
     # Hash password before storing
     hashed_password = pwd_context.hash(user.password)
-    new_user = User(email=user.email, password=hashed_password)
+    new_user = User(username = user.username,
+                    email=user.email, 
+                    password=hashed_password,
+                    profile_picture=user.profile_picture)
 
     db.add(new_user)
     await db.commit()
@@ -38,10 +41,10 @@ async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_access_token({"sub": db_user.email, "user_id": db_user.id})
-    return {"access_token": token, "token_type": "bearer"}  # ✅ Fixed key
+    return {"access_token": token, "token_type": "bearer"} 
 
 
 # Get User Info (Ensures Authenticated Requests)
 @router.get("/me")
 async def get_user_info(current_user: User = Depends(get_current_user)):
-    return {"email": current_user.email, "id": current_user.id}
+    return {"username": current_user.username, "email": current_user.email, "id": current_user.id, "profilePicture": current_user.profile_picture}

@@ -2,6 +2,7 @@
 
 ##request:
 curl -X POST "https://vibemapbe.com/auth/auth/register" -H "Content-Type: application/json" -d '{
+    "username": "test",
     "email": "ago@mail.com",
     "password": "pass"
 }'
@@ -26,25 +27,24 @@ curl -X POST "https://vibemapbe.com/auth/auth/login" -H "Content-Type: applicati
 
 ##request:
 curl -X GET "https://vibemapbe.com/auth/auth/me" \
-     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZ29zdG9uQGVtYWlsLmNvbSIsInVzZXJfaWQiOjQsImV4cCI6MTc0MTY5NDc1N30.gm1o3C72_YLL7GH3ABuwPhWbt8jHi15SQvqa8w9ngCI"
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZ28yQG1haWwuY29tIiwidXNlcl9pZCI6MSwiZXhwIjoxNzQxODA1OTY5fQ.Wu7XDpZBZusCeI79tx_OODMDUUEnj0JGW8bQXLI_TQM"
 
 ##response:
 {"email":"ago@mail.com","id":2}
 
+##Creating a location with user token:
+
+curl -X POST "https://vibemapbe.com/location/location/locations/" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZ28yQG1haWwuY29tIiwidXNlcl9pZCI6MSwiZXhwIjoxNzQxODA1OTI2fQ.GgcCONAs-nvYtveA5mW9NhxuuKTG_R54m87GLp7qTLA" \
+-H "Content-Type: application/json" \
+-d '{
+  "latitude": 52.3748725,
+  "longitude": 4.9448453,
+  "comment": "Good soup",
+  "stress_level": 3.5
+}'
 
 
-What I would need:
-- Store the profile picture as base64 with all the user data (big ass string), during signup I will send 
-	- name
-	- email
-	- password
-	- profile pic (as a string)
-- using the auth/me request return every user data:
-    - name
-    - email
-    - id 
-    - profile pic
-
-#locations
-##get locations:
+##Response
+{"latitude":52.3748725,"longitude":4.9448453,"stress_level":3.5,"comment":"Good soup","id":5,"user_Id":1}
 
