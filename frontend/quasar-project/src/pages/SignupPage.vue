@@ -20,6 +20,7 @@
           filled
           accept="image/*"
           :max-files="1"
+          @update:model-value="handleFileUpload"
           @added="previewImage"
         />
 
@@ -88,6 +89,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const email = ref('');
 const password = ref('');
@@ -96,9 +98,37 @@ const username = ref('');
 const termsAccepted = ref(false);
 const profilePicture = ref(null);
 const imageUrl = ref(null);
+const result = "";
 
 // Computed property to check if passwords match
 const passwordMismatch = computed(() => password.value !== passwordConfirm.value);
+
+const router = useRouter();
+
+const handleFileUpload = (profilePicture) => {
+  if (profilePicture) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // Set the Base64 string as the image source
+      imageUrl.value = e.target.result;
+    };
+    reader.readAsDataURL(imageUrl); // Convert the file to Base64
+  } else {
+    imageUrl.value = ''; // Clear the image if no file is selected
+  }
+  return {
+    profilePicture,
+    imageUrl,
+    handleFileUpload,
+  };
+};
+
+const saveToLocalStorage = () => {
+  if (imageUrl.value) {
+    localStorage.setItem('uploadedImage', imageUrl.value);
+    console.log('Image saved to local storage.');
+  }
+};
 
 const submitForm = () => {
   if (passwordMismatch.value) {
@@ -117,13 +147,14 @@ const submitForm = () => {
   var signupData = {
     email: email.value,
     password: password.value,
-    passwordConfirm: passwordConfirm.value,
-    username: username.value,
-    termsAccepted: termsAccepted.value,
-    profilePicture: profilePicture.value,
+    //passwordConfirm: passwordConfirm.value,
+    //username: username.value,
+    //termsAccepted: termsAccepted.value,
+    //profilePicture: profilePicture.value,
+    //profilePicture: imageUrl.value,
   };
 
-  fetch('/auth/register', {
+  fetch('https://vibemapbe.com/auth/auth/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -132,12 +163,21 @@ const submitForm = () => {
   })
   .then(response => response.json())
   .then(data => {
-    // Handle successful signup
-    console.log('Signup successful:', data);
+    if(result.status != 200){
+      alert(data);
+      router.push('/profile');
+    }
+    else{
+      // Handle successful signup
+      console.log('Signup successful:', data);
+      router.push('/');
+      saveToLocalStorage();
+    }
   })
   .catch(error => {
     // Handle signup error
     console.error('Signup error:', error);
+    alert('Signup failed. Please try again. Error: ' + error);
   });
 };
 
@@ -152,4 +192,5 @@ const previewImage = () => {
     reader.readAsDataURL(file); // Convert the file to a base64 string
   }
 };
+
 </script>

@@ -1,11 +1,6 @@
 #register user:
 
 ##request:
-curl -X POST "http://35.204.6.188/auth/register" -H "Content-Type: application/json" -d '{
-    "username". "test",
-    "email": "ago@mail.com",
-    "password": "pass"
-}'
 curl -X POST "https://vibemapbe.com/auth/auth/register" -H "Content-Type: application/json" -d '{
     "username": "test",
     "email": "ago@mail.com",
