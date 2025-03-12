@@ -21,7 +21,6 @@
           accept="image/*"
           :max-files="1"
           @update:model-value="handleFileUpload"
-          @added="previewImage"
         />
 
         <!-- Image Preview or Placeholder -->
@@ -106,7 +105,7 @@ const passwordMismatch = computed(() => password.value !== passwordConfirm.value
 const router = useRouter();
 
 // Function to resize and compress the image
-const resizeImage = (file, maxWidth = 180, maxHeight = 180, quality = 0.8) => {
+const resizeImage = (file, maxWidth = 180, maxHeight = 180, maxSizeInKB = 500) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -140,18 +139,39 @@ const resizeImage = (file, maxWidth = 180, maxHeight = 180, quality = 0.8) => {
         // Draw the image on the canvas
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Convert the canvas to a base64 image with reduced quality
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) {
-              reject(new Error('Failed to resize image.'));
-              return;
-            }
-            resolve(blob);
-          },
-          'image/jpeg', // You can change this to 'image/png' if needed
-          quality // Quality parameter (0.8 = 80% quality)
-        );
+        // Function to compress the image iteratively
+        const compressImage = (quality) => {
+          return new Promise((resolve, reject) => {
+            canvas.toBlob(
+              (blob) => {
+                if (!blob) {
+                  reject(new Error('Failed to compress image.'));
+                  return;
+                }
+
+                // Check if the blob size is within the limit
+                if (blob.size / 1024 <= maxSizeInKB) {
+                  resolve(blob);
+                } else {
+                  // Reduce quality and try again
+                  const newQuality = quality - 0.1; // Reduce quality by 10%
+                  if (newQuality >= 0.1) {
+                    compressImage(newQuality).then(resolve).catch(reject);
+                  } else {
+                    reject(new Error('Unable to compress image below the specified size.'));
+                  }
+                }
+              },
+              'image/jpeg', // You can change this to 'image/png' if needed
+              quality // Quality parameter (0.8 = 80% quality)
+            );
+          });
+        };
+
+        // Start compression with an initial quality of 0.9 (90%)
+        compressImage(0.9)
+          .then((blob) => resolve(blob))
+          .catch((error) => reject(error));
       };
 
       img.onerror = (error) => {
