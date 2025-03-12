@@ -15,7 +15,7 @@ curl -X POST "https://vibemapbe.com/auth/auth/register" -H "Content-Type: applic
 #login:
 ##request:
 curl -X POST "https://vibemapbe.com/auth/auth/login" -H "Content-Type: application/json" -d '{
-    "email": "ago@mail.com",
+    "email": "ago2@mail.com",
     "password": "pass"
 }'
 
@@ -27,7 +27,7 @@ curl -X POST "https://vibemapbe.com/auth/auth/login" -H "Content-Type: applicati
 
 ##request:
 curl -X GET "https://vibemapbe.com/auth/auth/me" \
-     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZ28yQG1haWwuY29tIiwidXNlcl9pZCI6MSwiZXhwIjoxNzQxODA1OTY5fQ.Wu7XDpZBZusCeI79tx_OODMDUUEnj0JGW8bQXLI_TQM"
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZ28yQG1haWwuY29tIiwidXNlcl9pZCI6MSwiZXhwIjoxNzQxODExNTc3fQ.6jCXbnx-1cmLAATjfBwFYeKeoyY5SxZbl0Ux3G3xZt0"
 
 ##response:
 {"email":"ago@mail.com","id":2}

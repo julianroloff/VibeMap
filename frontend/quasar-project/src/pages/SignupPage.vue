@@ -142,16 +142,16 @@ const submitForm = () => {
     passwordConfirm: passwordConfirm.value,
     username: username.value,
     termsAccepted: termsAccepted.value,
-    profilePicture: profilePicture.value,
+    profilePicture: imageUrl.value,
   });
   var signupData = {
     email: email.value,
     password: password.value,
     //passwordConfirm: passwordConfirm.value,
-    //username: username.value,
+    username: username.value,
     //termsAccepted: termsAccepted.value,
     //profilePicture: profilePicture.value,
-    //profilePicture: imageUrl.value,
+    profilePicture: imageUrl.value,
   };
 
   fetch('https://vibemapbe.com/auth/auth/register', {

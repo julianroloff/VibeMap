@@ -121,9 +121,10 @@ export default {
         const data = await response.json();
         userInfo.value[0] = {
           ...userInfo.value[0], // Keep existing fields
-          username: data.email, // Update username from API
+          username: data.username, // Update username from API
           email: data.email, // Update email from API
           userId: data.id, // Update userId from API
+          picture: data.profilePicture, // Update profilePicture from API
           token: token, // Update token from API
         };
         //console.log(userInfo.value[0]);
