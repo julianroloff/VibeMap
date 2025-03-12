@@ -44,6 +44,69 @@
         </q-card-section>
       </q-card>
     </div>
+    <div class="intro-cont p-5 pt-5 bg-primary" v-if="!isLoggedIn && showIntro">
+      <q-card v-if="currentCard === 1">
+        <div class="text-h4 font-atkinson-bold">Welcome to VibeMap</div>
+        <div class="text-body1">
+          <p>Find your calm in the urban jungle. VibeMap is a community‐driven guide that shows you where to find relaxing spots and avoid stress in your city.</p>
+          <p>By rating places on a 1–4 scale using smileys and sharing feedback on ambiance, noise, and environment – along with your personal comments – you help build a living map that reflects the true vibe of your urban surroundings.</p>
+          <p>Your input helps everyone navigate towards more relaxing experiences.</p>
+        </div>
+        <div class="btn-cnt">
+          <q-btn label="Skip" color="secondary" @click="closeCards" class="radius-10 left-btn" />
+          <q-btn label="Next" color="primary" @click="nextCard" class="radius-10 right-btn" />
+        </div>
+      </q-card>
+      <q-card v-if="currentCard === 2">
+        <div class="text-h4 font-atkinson-bold">How to use VibeMap</div>
+        <div class="text-body1">
+          <p>1. Rate your current location by selecting a smiley that best represents your stress level.</p>
+          <p>2. Add a comment to share your thoughts on the location.</p>
+          <p>3. Your rating will be added to the map and shared with the community.</p>
+          <p>4. Use the map to find relaxing spots and avoid stress in your city.</p>
+        </div>
+        <div class="btn-cnt">
+          <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
+          <q-btn label="Next" color="primary" @click="nextCard" class="radius-10 right-btn" />
+        </div>
+      </q-card>
+      <q-card v-if="currentCard === 3">
+        <div class="text-h4 font-atkinson-bold">Get started</div>
+        <div class="text-body1">
+          <p>Sign up or log in to start rating your location and help others find their calm.</p>
+        </div>
+        <div>
+          <q-item class="q-gutter-sm w-100">
+            <q-btn label="Login" color="primary" class="col-6" to="/profile" />
+            <q-btn label="Signup" color="secondary" outline class="col-6" to="./signup" />
+          </q-item>
+        </div>
+        <div class="btn-cnt">
+          <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
+          <q-btn label="Next" color="primary" @click="nextCard" class="radius-10 right-btn" />
+        </div>
+      </q-card>
+      <q-card v-if="currentCard === 4">
+        <div class="text-h4 font-atkinson-bold">About VibeMap</div>
+        <div class="text-body1">
+          <p>VibeMap is a project by the students of the University of Amsterdam. It is a part of the Social Complexity and Designing with Data course, which aims to promote and increase urban mental health.</p>
+        </div>
+        <div class="btn-cnt">
+          <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
+          <q-btn label="Next" color="primary" @click="nextCard" class="radius-10 right-btn" />
+        </div>
+      </q-card>
+      <q-card v-if="currentCard === 5">
+        <div class="text-h4 font-atkinson-bold">Contact us</div>
+        <div class="text-body1">
+          <p>For questions or feedback, please contact us at <a href="mailto:agoston.reischl@student.uva.nl">agoston.reischl@student.uva.nl</a>.</p>
+        </div>
+        <div class="btn-cnt">
+          <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
+          <q-btn label="Close" color="primary" @click="closeCards" class="radius-10 right-btn" />
+        </div>
+      </q-card>
+    </div>
   </q-page>
 </template>
 
@@ -57,6 +120,8 @@ export default {
     return {
       map: null,
       userMarker: null,
+      currentCard: 1,
+      showIntro: true,
     };
   },
   mounted() {
@@ -75,6 +140,20 @@ export default {
       script.defer = true;
       script.onload  = () => this.initMap();
       document.head.appendChild(script);
+    },
+    nextCard() {
+      if (this.currentCard < 5) {
+        this.currentCard++;
+      }
+    },
+    previousCard() {
+      if (this.currentCard < 6) {
+        this.currentCard--;
+      }
+    },
+    closeCards() {
+      this.currentCard = 1;
+      this.showIntro = false;
     },
 
     initMap() {

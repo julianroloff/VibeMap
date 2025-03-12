@@ -1,16 +1,47 @@
 @font-face {
     font-family: Karla;
     src: url(./fonts/Karla.woff);
-  }
-  
+}
+@font-face {
+    font-family: Atkinson-Bold;
+    src: url(./fonts/AtkinsonHyperlegible-Bold.woff);
+}
+@font-face {
+    font-family: Atkinson-BoldItalic;
+    src: url(./fonts/AtkinsonHyperlegible-BoldItalic.woff);
+}
+@font-face {
+    font-family: Atkinson-Italic;
+    src: url(./fonts/AtkinsonHyperlegible-Italic.woff);
+}
+@font-face {
+    font-family: Atkinson-Regular;
+    src: url(./fonts/AtkinsonHyperlegible-Regular.woff);
+}
+//Atkinson font is supposed to be super readable: https://m3.material.io/blog/atkinson-hyperlegible-design 
+
+
   // declare a class which applies it
 .font-karla {
     font-family: 'Karla' !important;
+}
+.font-atkinson-bold {
+    font-family: 'Atkinson-Bold' !important;
+}
+.font-atkinson-bold-italic {
+    font-family: 'Atkinson-BoldItalic' !important;
+}
+.font-atkinson-italic {
+    font-family: 'Atkinson-Italic' !important;
+}
+.font-atkinson-regular {
+    font-family: 'Atkinson-Regular' !important;
 }
 
 // app global css in SCSS form
 html, body, #q-app {
     height: 100%;
+    font-family: Atkinson-Regular, Karla, sans-serif;
 }
 .main-page {
     position: fixed;
@@ -173,4 +204,38 @@ html, body, #q-app {
     border-radius: 100%;
     width: 60px;
     height: 60px;
+}
+
+.intro-cont {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    margin: auto;
+    border-radius: 0;
+    height: 100%;
+    top: 0;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    background: rgb(44 110 73 / 85%) !important;
+    .q-card {
+        padding: 10px;
+        min-height: 60%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: stretch;
+        width: 98%;
+    }
+    .btn-cnt {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
