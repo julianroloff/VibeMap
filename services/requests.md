@@ -49,3 +49,8 @@ curl -X POST "https://vibemapbe.com/location/location/locations/" \
 ##Response
 {"latitude":52.3748725,"longitude":4.9448453,"stress_level":3.5,"comment":"Good soup","id":5,"user_Id":1}
 
+
+##Requesting locations created by user
+
+curl -X GET "http://vibemapbe.com/location/locations/user/{user_id}"
+
