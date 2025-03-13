@@ -21,12 +21,30 @@
             :color-selected="ratingColors"
             :icon="icons"
           />
+          <q-checkbox v-if="ratingModel"
+            v-model="noise"
+            checked-icon="campaign"
+            unchecked-icon="volume_down_alt"
+            indeterminate-icon="sound_detection_loud_sound"
+          />
+          <q-checkbox v-if="ratingModel"
+            v-model="crowd"
+            checked-icon="groups"
+            unchecked-icon="group_off"
+            indeterminate-icon="groups_2"
+          />
+          <q-checkbox v-if="ratingModel"
+            v-model="construction"
+            checked-icon="construction"
+            unchecked-icon="construction"
+            indeterminate-icon="construction"
+          />
           <q-input v-if="ratingModel"
             v-model="reason"
             label="Reason"
             placeholder="Why did you give this rating?"
             type="textarea"
-            rows="3"
+            rows="1"
             optional
           />
         </q-card-section>
@@ -46,7 +64,7 @@
     </div>
     <div class="intro-cont p-5 pt-5 bg-primary" v-if="!isLoggedIn && showIntro">
       <q-card v-if="currentCard === 1">
-        <div class="text-h4 font-atkinson-bold">Welcome to VibeMap</div>
+        <div class="text-h5 font-atkinson-bold">Welcome to VibeMap</div>
         <div class="text-body1">
           <p>Find your calm in the urban jungle. VibeMap is a community‐driven guide that shows you where to find relaxing spots and avoid stress in your city.</p>
           <p>By rating places on a 1–4 scale using smileys and sharing feedback on ambiance, noise, and environment – along with your personal comments – you help build a living map that reflects the true vibe of your urban surroundings.</p>
@@ -58,12 +76,11 @@
         </div>
       </q-card>
       <q-card v-if="currentCard === 2">
-        <div class="text-h4 font-atkinson-bold">How to use VibeMap</div>
+        <div class="text-h5 font-atkinson-bold">Understanding Urban Stress</div>
         <div class="text-body1">
-          <p>1. Rate your current location by selecting a smiley that best represents your stress level.</p>
-          <p>2. Add a comment to share your thoughts on the location.</p>
-          <p>3. Your rating will be added to the map and shared with the community.</p>
-          <p>4. Use the map to find relaxing spots and avoid stress in your city.</p>
+          <p>City life is full of contrasts. For some, the hum of construction or crowded streets can be overwhelming, while for others, a touch of nature or active leisure can provide much-needed relief.</p>
+          <p>We want to understand how these factors affect you personally – so that VibeMap can better guide you to the environments that match your unique needs.</p>
+          <p>VibeMap is a project by the students of the University of Amsterdam. It is a part of the Social Complexity and Designing with Data course, which aims to promote and increase urban mental health.</p>
         </div>
         <div class="btn-cnt">
           <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
@@ -71,8 +88,50 @@
         </div>
       </q-card>
       <q-card v-if="currentCard === 3">
-        <div class="text-h4 font-atkinson-bold">Get started</div>
+        <div class="text-h5 font-atkinson-bold">Preferences</div>
         <div class="text-body1">
+          <p>You can select what you would like to see on your map. You can modify these later in the Settings page.</p>
+        </div>
+        <div class="pref-cont">
+          <q-toggle v-model="constructionMarkings" label="Enable Construction Markings" @update:model-value="saveSetting('constructionMarkings', constructionMarkings)" />
+          <q-toggle v-model="sportFacilities" label="Enable Sport Facility Markings" @update:model-value="saveSetting('sportFacilities', sportFacilities)" />
+          <q-toggle v-model="highstress" label="Show High-Stress areas" @update:model-value="saveSetting('highstress', highstress)" />
+          <q-toggle v-model="mediumstress" label="Show Medium-Stress areas" @update:model-value="saveSetting('mediumstress', mediumstress)" />
+          <q-toggle v-model="nostress" label="Show No-Stress areas" @update:model-value="saveSetting('nostress', nostress)" />
+          <q-toggle v-model="absnostress" label="Show Absolutely No-Stress areas" @update:model-value="saveSetting('absnostress', absnostress)" />
+        </div>
+        <div class="btn-cnt">
+          <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
+          <q-btn label="Next" color="primary" @click="nextCard" class="radius-10 right-btn" />
+        </div>
+      </q-card>
+      <!--q-card v-if="currentCard === 4">
+        <div class="text-h5 font-atkinson-bold">About You!</div>
+        <div class="text-body1">
+          <p>Please rate the personal impact of the following factors on you.</p>
+        </div>
+        <div class="btn-cnt">
+          <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
+          <q-btn label="Next" color="primary" @click="nextCard" class="radius-10 right-btn" />
+        </div>
+      </q-card-->
+      <q-card v-if="currentCard === 4">
+        <div class="text-h5 font-atkinson-bold">How VibeMap Works</div>
+        <div class="text-body1">
+          <p>1. Rate your current location by selecting a smiley that best represents your stress level.</p>
+          <p>2. Add a comment to share your thoughts on the location. Optionally, select the cause of your rating using the available options.</p>
+          <p>3. Use the map to find relaxing spots and avoid stress in your city.</p>
+          <p>Every rating and comment builds a detailed, crowdsourced map to help everyone navigate toward a more relaxed city.</p>
+        </div>
+        <div class="btn-cnt">
+          <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
+          <q-btn label="Next" color="primary" @click="nextCard" class="radius-10 right-btn" />
+        </div>
+      </q-card>
+      <q-card v-if="currentCard === 5">
+        <div class="text-h5 font-atkinson-bold">Contact us</div>
+        <div class="text-body1">
+          <p>For questions or feedback, please contact us at using the <q-btn to="/feedback" label="Feedback" flat color="primary"/> page.</p>
           <p>Sign up or log in to start rating your location and help others find their calm.</p>
         </div>
         <div>
@@ -83,27 +142,7 @@
         </div>
         <div class="btn-cnt">
           <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
-          <q-btn label="Next" color="primary" @click="nextCard" class="radius-10 right-btn" />
-        </div>
-      </q-card>
-      <q-card v-if="currentCard === 4">
-        <div class="text-h4 font-atkinson-bold">About VibeMap</div>
-        <div class="text-body1">
-          <p>VibeMap is a project by the students of the University of Amsterdam. It is a part of the Social Complexity and Designing with Data course, which aims to promote and increase urban mental health.</p>
-        </div>
-        <div class="btn-cnt">
-          <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
-          <q-btn label="Next" color="primary" @click="nextCard" class="radius-10 right-btn" />
-        </div>
-      </q-card>
-      <q-card v-if="currentCard === 5">
-        <div class="text-h4 font-atkinson-bold">Contact us</div>
-        <div class="text-body1">
-          <p>For questions or feedback, please contact us at <a href="mailto:agoston.reischl@student.uva.nl">agoston.reischl@student.uva.nl</a>.</p>
-        </div>
-        <div class="btn-cnt">
-          <q-btn label="Previous" color="secondary" @click="previousCard" class="radius-10 left-btn" />
-          <q-btn label="Close" color="primary" @click="closeCards" class="radius-10 right-btn" />
+          <q-btn label="Get started!" color="primary" @click="closeCards" class="radius-10 right-btn" />
         </div>
       </q-card>
     </div>
@@ -111,6 +150,7 @@
 </template>
 
 <script>
+//import { latLng } from 'leaflet';
 import { ref, onMounted } from 'vue'
 //import { inject } from 'vue'
 //import { getModuleURL } from 'workbox-build';
@@ -143,12 +183,12 @@ export default {
       document.head.appendChild(script);
     },
     nextCard() {
-      if (this.currentCard < 5) {
+      if (this.currentCard < 6) {
         this.currentCard++;
       }
     },
     previousCard() {
-      if (this.currentCard < 6) {
+      if (this.currentCard < 7) {
         this.currentCard--;
       }
     },
@@ -361,55 +401,37 @@ export default {
       this.map.setCenter(defaultLocation);
       this.map.setZoom(12);
     },
-    async submitRating() {
-      //console.log("Rating:", this.ratingModel);
-      //console.log("Reason:", this.reason);
-      //console.log("Location:", this.map.getCenter().toJSON());
-      //var response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
-      //console.log(response);
-      //const lastRowId = response._rawValue.length;
-      //response._rawValue.unshift({
-      //  id: lastRowId+1,
-      //  userId: Number(localStorage.getItem("loggedInId")),
-      //  latitude: this.map.getCenter().lat(),
-      //  longitude: this.map.getCenter().lng(),
-      //  stress_level: this.ratingModel,
-      //  comment: this.reason,
-      //  geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
-      //});
-      //response._value.unshift({
-      //  id: lastRowId,
-      //  userId: localStorage.getItem("loggedInId"),
-      //  latitude: this.map.getCenter().lat(),
-      //  longitude: this.map.getCenter().lng(),
-      //  stress_level: this.ratingModel,
-      //  comment: this.reason,
-      //  geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
-      //});
-      //localStorage.setItem("response", JSON.stringify(response));
-      //console.log(response);
-      /*const refreshPage = () => {
-        location.reload(); // Reloads the current page
+
+    getMarkerLatLng(userMarker) {
+      if (!userMarker || !userMarker.getPosition) {
+        throw new Error("Invalid marker object provided.");
+      }
+      const position = userMarker.getPosition(); // Get the LatLng object
+      return {
+        lat: position.lat(), // Get latitude
+        lng: position.lng(), // Get longitude
       };
-      refreshPage();*/
-      //this.loadHeatmap();
+    },
+    
+    async submitRating() {
+      
+      if (!this.userMarker) {
+        console.error("User marker is not available.");
+        return;
+      }
+
       // Prepare the data for the POST request
       const token = localStorage.getItem("usertoken");
-      /*if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const userLocation = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            this.map.setCenter(userLocation);
-          }
-        );
-      }*/
+      
+      const latLng = this.getMarkerLatLng(this.userMarker);
+        console.log("Latitude:", latLng.lat);
+        console.log("Longitude:", latLng.lng);
+
+      console.log(latLng);
 
       const ratingData = {
-        latitude: this.map.getCenter().lat(), // Use the map's center latitude
-        longitude: this.map.getCenter().lng(), // Use the map's center longitude
+        latitude: latLng.lat, // Use the map's center latitude
+        longitude: latLng.lng, // Use the map's center longitude
         comment: this.reason ? this.reason : null, // Use the reason entered by the user
         stress_level: this.ratingModel, // Use the selected rating
       };
@@ -446,28 +468,31 @@ export default {
     }
   },
   setup () {
-    const isLoggedIn = ref(true)
-    const constructionMarkings = ref(true);
-    const sportFacilities = ref(true);
-    const highstress = ref(true);
-    const mediumstress = ref(true);
-    const nostress = ref(true);
-    const absnostress = ref(true);
-    const nightMode = ref(false);
+    const isLoggedIn = ref()
+    const constructionMarkings = ref();
+    const sportFacilities = ref();
+    const highstress = ref();
+    const mediumstress = ref();
+    const nostress = ref();
+    const absnostress = ref();
+    const nightMode = ref();
     // Check if the user is logged in by reading localStorage
     onMounted(() => {
       isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
       //console.log(profileEdit.value)
-      constructionMarkings.value = JSON.parse(localStorage.getItem("constructionMarkings")) || true;
-      sportFacilities.value = JSON.parse(localStorage.getItem("sportFacilities")) || true;
-      highstress.value = JSON.parse(localStorage.getItem("highstress")) || true;
-      mediumstress.value = JSON.parse(localStorage.getItem("mediumstress")) || true;
-      nostress.value = JSON.parse(localStorage.getItem("nostress")) || true;
-      absnostress.value = JSON.parse(localStorage.getItem("absnostress")) || true;
-      nightMode.value = JSON.parse(localStorage.getItem("nightMode")) || false;
+      constructionMarkings.value = JSON.parse(localStorage.getItem("constructionMarkings"));
+      sportFacilities.value = JSON.parse(localStorage.getItem("sportFacilities"));
+      highstress.value = JSON.parse(localStorage.getItem("highstress"));
+      mediumstress.value = JSON.parse(localStorage.getItem("mediumstress"));
+      nostress.value = JSON.parse(localStorage.getItem("nostress"));
+      absnostress.value = JSON.parse(localStorage.getItem("absnostress"));
+      nightMode.value = JSON.parse(localStorage.getItem("nightMode"));
     })
+    const saveSetting = (key, value) => {
+      localStorage.setItem(key, JSON.stringify(value));
+    };
     return {
       ratingModel: ref(0),
       ratingColors: [ 'red', 'orange', 'green', 'green-9'],
@@ -477,6 +502,9 @@ export default {
         'sentiment_satisfied',
         'sentiment_very_satisfied'
       ],
+      noise: ref(true),
+      crowd: ref(true),
+      construction: ref(true),
       isLoggedIn,
       constructionMarkings,
       sportFacilities,
@@ -484,7 +512,8 @@ export default {
       highstress,
       mediumstress,
       nostress,
-      absnostress
+      absnostress,
+      saveSetting
     }
   }
 };

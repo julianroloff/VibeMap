@@ -28,21 +28,32 @@
 </template>
 
 <script>
-import { ref, onMounted, inject } from 'vue';
+import { ref, onMounted } from 'vue';
 
 export default {
   setup() {
-    const ratings = ref([
-      { date: '19-02-2025', value: 4, reason: 'Very calm neighbourhood, not a lot of people, no constructions nearby.', lat: 52.477956, long: 4.797070 },
-      { date: '18-02-2025', value: 2, reason: 'Lot of constructions nearby, can\'t relax.', lat: 52.277956, long: 4.997070 },
-      { date: '17-02-2025', value: 1, reason: 'I just hate life.', lat: 52.377956, long: 4.997070 },
-      { date: '17-02-2025', value: 3, reason: 'meh.', lat: 52.377956, long: 4.897070 }
-    ]);
-    const globalresponse = [inject('response')];
-    console.log(globalresponse[0]._rawValue);
-    //const responses = globalresponse[0]._rawValue;
-    const response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
-    const responses = response._rawValue;
+    const ratings = ref([]);
+    
+    try {
+      // Fetch data from the API
+      var response = fetch("https://vibemapbe.com/location/location/locations/user/${loggedInId.value}", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.value[0].token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const apiData = response.json(); // Parse the JSON response
+      response = apiData;
+      console.log(response);
+    }
+    catch (error) {
+      console.error('Error fetching data:', error);
+    }
+    const responses = response;
     console.log(responses); 
     const loggedInId = ref("")
     const mapElements = ref([]);
@@ -56,6 +67,7 @@ export default {
       setTimeout(() => {
         loadGoogleMaps();
       }, 1);
+
       usertoken.value = localStorage.getItem("usertoken");
       loggedInId.value = Number(localStorage.getItem("loggedInId"));
       fetchUserData(usertoken.value);
@@ -152,11 +164,11 @@ export default {
       return colors[value - 1] || ''; // Default to an empty string if value is out of range
     }
 
-    const isLoggedIn = ref(true)
+    const isLoggedIn = ref()
     
     // Check if the user is logged in by reading localStorage
     onMounted(() => {
-      isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
+      isLoggedIn.value = localStorage.getItem("isLoggedIn");
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
       //console.log(profileEdit.value)

@@ -25,23 +25,23 @@ import { ref, onMounted } from "vue";
 
 export default {
   setup() {
-    const constructionMarkings = ref(true);
-    const sportFacilities = ref(true);
-    const highstress = ref(true);
-    const mediumstress = ref(true);
-    const nostress = ref(true);
-    const absnostress = ref(true);
-    const nightMode = ref(false);
+    const constructionMarkings = ref();
+    const sportFacilities = ref();
+    const highstress = ref();
+    const mediumstress = ref();
+    const nostress = ref();
+    const absnostress = ref();
+    const nightMode = ref();
 
     // Load saved settings from localStorage
     onMounted(() => {
-      constructionMarkings.value = JSON.parse(localStorage.getItem("constructionMarkings")) || true;
-      sportFacilities.value = JSON.parse(localStorage.getItem("sportFacilities")) || true;
-      highstress.value = JSON.parse(localStorage.getItem("highstress")) || true;
-      mediumstress.value = JSON.parse(localStorage.getItem("mediumstress")) || true;
-      nostress.value = JSON.parse(localStorage.getItem("nostress")) || true;
-      absnostress.value = JSON.parse(localStorage.getItem("absnostress")) || true;
-      nightMode.value = JSON.parse(localStorage.getItem("nightMode")) || false;
+      constructionMarkings.value = JSON.parse(localStorage.getItem("constructionMarkings"));
+      sportFacilities.value = JSON.parse(localStorage.getItem("sportFacilities"));
+      highstress.value = JSON.parse(localStorage.getItem("highstress"));
+      mediumstress.value = JSON.parse(localStorage.getItem("mediumstress"));
+      nostress.value = JSON.parse(localStorage.getItem("nostress"));
+      absnostress.value = JSON.parse(localStorage.getItem("absnostress"));
+      nightMode.value = JSON.parse(localStorage.getItem("nightMode"));
     });
 
     const saveSetting = (key, value) => {
