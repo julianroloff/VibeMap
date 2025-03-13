@@ -111,7 +111,8 @@
 </template>
 
 <script>
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted } from 'vue'
+//import { inject } from 'vue'
 //import { getModuleURL } from 'workbox-build';
 
 
@@ -258,36 +259,50 @@ export default {
       }
     },
 
-    loadHeatmap() {
-      const globalresponse = [inject('response')];
-      console.log(globalresponse[0]._rawValue);
+    async loadHeatmap() {
+      //const globalresponse = [inject('response')];
+      //console.log(globalresponse[0]._rawValue);
       //const response = globalresponse[0]._rawValue;
-      const response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
+      var response = [];
+
+      try {
+        // Fetch data from the API
+        response = await fetch("https://vibemapbe.com/location/location/locations/");
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const apiData = await response.json(); // Parse the JSON response
+        response = apiData;
+        console.log(response);
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+        //response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
+      }
+
       console.log(response);
       const stressLevel1 = [];
       const stressLevel2 = [];
       const stressLevel3 = [];
       const stressLevel4 = [];
 
-      response._rawValue.forEach(item => {
+      response.forEach(item => {
         const data ={ 
           location: new window.google.maps.LatLng(item.latitude, item.longitude), 
           weight: item.stress_level 
         };
         
-        switch (item.stress_level) {
-          case 1:
-            stressLevel1.push(data);
-            break;
-          case 2:
-            stressLevel2.push(data);
-            break;
-          case 3:
-            stressLevel3.push(data);
-            break;
-          case 4:
-            stressLevel4.push(data);
-            break;
+        // Categorize data based on stress level ranges
+        if (item.stress_level >= 0.5 && item.stress_level < 1.5) {
+          stressLevel1.push(data);
+        } else if (item.stress_level >= 1.5 && item.stress_level < 2.5) {
+          stressLevel2.push(data);
+        } else if (item.stress_level >= 2.5 && item.stress_level < 3.5) {
+          stressLevel3.push(data);
+        } else if (item.stress_level >= 3.5 && item.stress_level <= 4.5) {
+          stressLevel4.push(data);
+        } else {
+          console.error("Invalid stress level:", item.stress_level);
         }
       });
 
@@ -346,41 +361,88 @@ export default {
       this.map.setCenter(defaultLocation);
       this.map.setZoom(12);
     },
-    submitRating() {
+    async submitRating() {
       //console.log("Rating:", this.ratingModel);
       //console.log("Reason:", this.reason);
       //console.log("Location:", this.map.getCenter().toJSON());
-      var response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
-      console.log(response);
-      const lastRowId = response._rawValue.length;
-      response._rawValue.unshift({
-        id: lastRowId+1,
-        userId: Number(localStorage.getItem("loggedInId")),
-        latitude: this.map.getCenter().lat(),
-        longitude: this.map.getCenter().lng(),
-        stress_level: this.ratingModel,
-        comment: this.reason,
-        geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
-      });
-      response._value.unshift({
-        id: lastRowId,
-        userId: localStorage.getItem("loggedInId"),
-        latitude: this.map.getCenter().lat(),
-        longitude: this.map.getCenter().lng(),
-        stress_level: this.ratingModel,
-        comment: this.reason,
-        geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
-      });
-      localStorage.setItem("response", JSON.stringify(response));
-      console.log(response);
+      //var response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
+      //console.log(response);
+      //const lastRowId = response._rawValue.length;
+      //response._rawValue.unshift({
+      //  id: lastRowId+1,
+      //  userId: Number(localStorage.getItem("loggedInId")),
+      //  latitude: this.map.getCenter().lat(),
+      //  longitude: this.map.getCenter().lng(),
+      //  stress_level: this.ratingModel,
+      //  comment: this.reason,
+      //  geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
+      //});
+      //response._value.unshift({
+      //  id: lastRowId,
+      //  userId: localStorage.getItem("loggedInId"),
+      //  latitude: this.map.getCenter().lat(),
+      //  longitude: this.map.getCenter().lng(),
+      //  stress_level: this.ratingModel,
+      //  comment: this.reason,
+      //  geom: '{"type":"Point","coordinates":['+ this.map.getCenter().lng() + ',' + this.map.getCenter().lat() +']}'
+      //});
+      //localStorage.setItem("response", JSON.stringify(response));
+      //console.log(response);
       /*const refreshPage = () => {
         location.reload(); // Reloads the current page
       };
       refreshPage();*/
       //this.loadHeatmap();
-      this.ratingModel = 0;
-      this.reason = "";
+      // Prepare the data for the POST request
+      const token = localStorage.getItem("usertoken");
+      /*if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            this.map.setCenter(userLocation);
+          }
+        );
+      }*/
 
+      const ratingData = {
+        latitude: this.map.getCenter().lat(), // Use the map's center latitude
+        longitude: this.map.getCenter().lng(), // Use the map's center longitude
+        comment: this.reason ? this.reason : null, // Use the reason entered by the user
+        stress_level: this.ratingModel, // Use the selected rating
+      };
+      try {
+        // Send the POST request to the API
+        const response = await fetch("https://vibemapbe.com/location/location/locations/", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(ratingData),
+        });
+
+        // Check if the request was successful
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Parse the response
+        const data = await response.json();
+        console.log("Review submitted successfully:", data);
+
+        // Optionally, update the local storage or reload the heatmap
+        this.loadHeatmap(); // Reload the heatmap to reflect the new review
+      } catch (error) {
+        console.error("Error submitting review:", error);
+        alert("Failed to submit review. Please try again.");
+      } finally {
+        // Reset the form
+        this.ratingModel = 0;
+        this.reason = "";
+      }
     }
   },
   setup () {

@@ -2,9 +2,10 @@
 
 ##request:
 curl -X POST "https://vibemapbe.com/auth/auth/register" -H "Content-Type: application/json" -d '{
-    "username": "test",
-    "email": "ago@mail.com",
-    "password": "pass"
+  "email": "test2@mail.com",
+  "password": "pass",
+  "profilePicture": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AJUA/9k=",
+  "username": "test"
 }'
 
 ##response:
@@ -15,8 +16,8 @@ curl -X POST "https://vibemapbe.com/auth/auth/register" -H "Content-Type: applic
 #login:
 ##request:
 curl -X POST "https://vibemapbe.com/auth/auth/login" -H "Content-Type: application/json" -d '{
-    "email": "ago@mail.com",
-    "password": "pass"
+    "email": "test@mail.com",
+    "password": "test"
 }'
 
 ##response:
@@ -27,10 +28,10 @@ curl -X POST "https://vibemapbe.com/auth/auth/login" -H "Content-Type: applicati
 
 ##request:
 curl -X GET "https://vibemapbe.com/auth/auth/me" \
-     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZ28yQG1haWwuY29tIiwidXNlcl9pZCI6MSwiZXhwIjoxNzQxODA1OTY5fQ.Wu7XDpZBZusCeI79tx_OODMDUUEnj0JGW8bQXLI_TQM"
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QG1haWwuY29tIiwidXNlcl9pZCI6NCwiZXhwIjoxNzQxODE1OTUyfQ.KncMkUUUF93V3dSt5TjAhic7iQdQv5jE2BzOEyj5y6w"
 
 ##response:
-{"email":"ago@mail.com","id":2}
+{"username":"test","email":"test@mail.com","id":4,"profilePicture":null}
 
 ##Creating a location with user token:
 

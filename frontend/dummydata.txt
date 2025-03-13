@@ -1,11 +1,3 @@
-<template>
-  <router-view />
-</template>
-
-<script setup>
-/*import { provide, ref } from 'vue';
-
-
 const response = ref ([
   { id: 40, userId: 1, latitude: 52.358, longitude: 4.868, stress_level: 4, comment: 'Very calm neighbourhood, not a lot of people, no constructions nearby.', geom: '{"type":"Point","coordinates":[4.868,52.358]}' },
   { id: 2, userId: 2, latitude: 52.355, longitude: 4.956, stress_level: 1, comment: 'I just hate life.', geom: '{"type":"Point","coordinates":[4.956,52.355]}' },
@@ -857,11 +849,3 @@ const response = ref ([
       "geom": "{\"type\":\"Point\",\"coordinates\":[16.6210559,47.2298864]}"
   }
 ]);
-
-provide('response', response);
-
-if (!localStorage.getItem('response') || localStorage.getItem('response') === "[]") {
-  localStorage.setItem('response', JSON.stringify(response));
-}*/
-
-</script>

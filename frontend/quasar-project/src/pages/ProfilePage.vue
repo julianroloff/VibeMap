@@ -75,6 +75,7 @@ export default {
     const loggedInId = ref("")
     const profileEdit = ref(false)
     const email = ref("")
+    const username = ref("");
     const password = ref("")
     const usertoken = ref("")
     const router = useRouter();
@@ -86,6 +87,7 @@ export default {
       isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
       loggedInId.value = localStorage.getItem("loggedInId");
       usertoken.value = localStorage.getItem("usertoken");
+      username.value = localStorage.getItem("username");
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
       //console.log(profileEdit.value)
@@ -112,6 +114,7 @@ export default {
             localStorage.setItem('isLoggedIn', 'false')
             localStorage.setItem('loggedInId', null)
             localStorage.setItem('usertoken', null)
+            localStorage.setItem('username', null)
             router.push('/profile');
             return;
           }
@@ -121,9 +124,10 @@ export default {
         const data = await response.json();
         userInfo.value[0] = {
           ...userInfo.value[0], // Keep existing fields
-          username: data.email, // Update username from API
+          username: data.username, // Update username from API
           email: data.email, // Update email from API
           userId: data.id, // Update userId from API
+          picture: data.profilePicture, // Update profilePicture from API
           token: token, // Update token from API
         };
         //console.log(userInfo.value[0]);
@@ -155,8 +159,10 @@ export default {
             //console.log(data); 
             usertoken.value = data.access_token;
             localStorage.setItem('usertoken', data.access_token)
+            username.value = data.username;
+            localStorage.setItem('username', username.value)
             router.push('/');
-            alert("Login successful! Welcome back " + email.value);
+            alert("Login successful! Welcome back " + username.value);
           } else {
             console.error("Login failed", response.responseText);
             alert("Login failed", response.responseText);
@@ -175,6 +181,7 @@ export default {
       localStorage.setItem('isLoggedIn', 'false')
       localStorage.setItem('loggedInId', null)
       email.value = "";
+      username.value = "";
       password.value = "";
       refreshPage();
     };
