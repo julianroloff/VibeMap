@@ -410,7 +410,7 @@ export default {
       const ratingData = {
         latitude: this.map.getCenter().lat(), // Use the map's center latitude
         longitude: this.map.getCenter().lng(), // Use the map's center longitude
-        comment: this.reason, // Use the reason entered by the user
+        comment: this.reason ? this.reason : null, // Use the reason entered by the user
         stress_level: this.ratingModel, // Use the selected rating
       };
       try {
