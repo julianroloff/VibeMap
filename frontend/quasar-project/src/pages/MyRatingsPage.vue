@@ -43,27 +43,6 @@ export default {
     const error = ref(null);
     const usertoken = ref("")
     
-    try {
-      // Fetch data from the API
-      var response = fetch(`https://vibemapbe.com/location/location/locations/user/${loggedInId.value}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${usertoken.value}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const apiData = response.json(); // Parse the JSON response
-      response = apiData;
-      console.log(response);
-    }
-    catch (error) {
-      console.error('Error fetching data:', error);
-    }
-    
-
     onMounted(() => {
       setTimeout(() => {
         loadGoogleMaps();
@@ -100,6 +79,25 @@ export default {
         //console.log(userInfo.value[0]);
       } catch (err) {
         error.value = err.message || 'Failed to fetch user data';
+      }
+      try {
+        // Fetch data from the API
+        var response = fetch(`https://vibemapbe.com/location/location/locations/user/${loggedInId.value}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${usertoken.value}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const apiData = response.json(); // Parse the JSON response
+        response = apiData;
+        console.log(response);
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
       }
     };
 
