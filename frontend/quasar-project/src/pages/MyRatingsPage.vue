@@ -2,7 +2,7 @@
   <div class="text-primary text-center q-pa-md flex flex-center w-100" v-if="isLoggedIn">
     <div class="text-h6">My ratings</div>
 
-    <q-card v-for="(response, index) in responses.filter(r => r.userId === loggedInId)" :key="index" class="myratings-card">
+    <q-card v-for="(response, index) in responses" :key="index" class="myratings-card">
       <q-card-section class="myratings-card-inner">
         <div class="map-elem" :ref="el => mapElements[index] = el"></div>
         <div class="rate-details">
