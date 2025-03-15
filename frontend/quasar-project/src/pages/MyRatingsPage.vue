@@ -33,6 +33,7 @@ import { ref, onMounted } from 'vue';
 export default {
   setup() {
     const ratings = ref([]);
+    const response = ref([]);
     const responses = response;
     console.log(responses); 
     const loggedInId = ref("")
@@ -43,6 +44,29 @@ export default {
     const error = ref(null);
     const usertoken = ref("")
     
+    const fetchRatingdata = async () => {
+      try {
+        // Fetch data from the API
+        var response = fetch(`https://vibemapbe.com/location/location/locations/user/${loggedInId.value}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${usertoken.value}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const apiData = response.json(); // Parse the JSON response
+        response = apiData;
+        console.log(response);
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    
+
     onMounted(() => {
       setTimeout(() => {
         loadGoogleMaps();
@@ -51,6 +75,7 @@ export default {
       usertoken.value = localStorage.getItem("usertoken");
       loggedInId.value = Number(localStorage.getItem("loggedInId"));
       fetchUserData(usertoken.value);
+      fetchRatingdata();
     });
 
     const fetchUserData = async (token) => {
@@ -79,25 +104,6 @@ export default {
         //console.log(userInfo.value[0]);
       } catch (err) {
         error.value = err.message || 'Failed to fetch user data';
-      }
-      try {
-        // Fetch data from the API
-        var response = fetch(`https://vibemapbe.com/location/location/locations/user/${loggedInId.value}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${usertoken.value}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const apiData = response.json(); // Parse the JSON response
-        response = apiData;
-        console.log(response);
-      }
-      catch (error) {
-        console.error('Error fetching data:', error);
       }
     };
 
