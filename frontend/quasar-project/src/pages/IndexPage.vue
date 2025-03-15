@@ -21,22 +21,22 @@
             :color-selected="ratingColors"
             :icon="icons"
           />
-          <q-checkbox v-if="ratingModel"
+          <q-checkbox v-if="ratingModel" class="checkbox noise"
             v-model="noise"
             checked-icon="campaign"
             unchecked-icon="volume_down_alt"
             indeterminate-icon="sound_detection_loud_sound"
           />
-          <q-checkbox v-if="ratingModel"
+          <q-checkbox v-if="ratingModel" class="checkbox crowd"
             v-model="crowd"
             checked-icon="groups"
             unchecked-icon="group_off"
             indeterminate-icon="groups_2"
           />
-          <q-checkbox v-if="ratingModel"
+          <q-checkbox v-if="ratingModel" class="checkbox construction"
             v-model="construction"
             checked-icon="construction"
-            unchecked-icon="construction"
+            unchecked-icon="build_circle"
             indeterminate-icon="construction"
           />
           <q-input v-if="ratingModel"
@@ -502,9 +502,9 @@ export default {
         'sentiment_satisfied',
         'sentiment_very_satisfied'
       ],
-      noise: ref(true),
-      crowd: ref(true),
-      construction: ref(true),
+      noise: ref(false),
+      crowd: ref(false),
+      construction: ref(false),
       isLoggedIn,
       constructionMarkings,
       sportFacilities,
