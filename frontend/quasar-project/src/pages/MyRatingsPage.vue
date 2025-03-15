@@ -45,7 +45,7 @@ export default {
     
     try {
       // Fetch data from the API
-      var response = fetch("https://vibemapbe.com/location/location/locations/user/${loggedInId.value}", {
+      var response = fetch(`https://vibemapbe.com/location/location/locations/user/${loggedInId.value}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -96,8 +96,8 @@ export default {
           userId: data.id, // Update userId from API
           token: token, // Update token from API
         };
-        localStorage.setItem("loggedInId", userInfo.value[0].userId);
-        console.log(userInfo.value[0]);
+        //localStorage.setItem("loggedInId", userInfo.value[0].userId);
+        //console.log(userInfo.value[0]);
       } catch (err) {
         error.value = err.message || 'Failed to fetch user data';
       }
