@@ -434,9 +434,9 @@ export default {
         longitude: latLng.lng, // Use the map's center longitude
         comment: this.reason ? this.reason : null, // Use the reason entered by the user
         stress_level: this.ratingModel, // Use the selected rating
-        //construction: this.construction,
-        //noise: this.noise,
-        //crowd: this.crowd,
+        construction: this.construction,
+        noise: this.noise,
+        crowd: this.crowd,
       };
       try {
         // Send the POST request to the API
