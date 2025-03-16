@@ -62,8 +62,8 @@ export default {
           id: item.id,
           stress_level: Math.round(item.stress_level),
           comment: item.comment,
-          latitude: item.location?.latitude,
-          longitude: item.location?.longitude,
+          latitude: item.latitude,
+          longitude: item.longitude,
         }));
         responses.value = processedData;
         console.log(responses.value);
