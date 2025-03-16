@@ -66,7 +66,7 @@ export default {
           longitude: Number(item.longitude),
         }));
         responses.value = processedData;
-        console.log(responses);
+        console.log(responses.value);
       }
       catch (error) {
         console.error('Error fetching data:', error);
@@ -129,7 +129,7 @@ export default {
 
     function initMaps() {
       mapElements.value.forEach((mapElement, index) => {
-        const response = responses[index]; // Get corresponding rating data
+        const response = responses.value[index]; // Get corresponding rating data
 
         const map = new window.google.maps.Map(mapElement, {
           center: { lat: response.latitude, lng: response.longitude },
