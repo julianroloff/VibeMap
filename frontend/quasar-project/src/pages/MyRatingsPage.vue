@@ -1,17 +1,18 @@
 <template>
   <div class="text-primary text-center q-pa-md flex flex-center w-100" v-if="isLoggedIn">
     <div class="text-h6">My ratings</div>
-
-    <q-card v-for="(response, index) in responses" :key="index" class="myratings-card">
-      <q-card-section class="myratings-card-inner">
-        <div class="map-elem" :ref="el => mapElements[index] = el"></div>
-        <div class="rate-details">
-          <div class="rate-date"> Rating ID: {{ response.id }}</div>
-          <div class="rate"><span class="material-icons" :style="{ color: getRatingColor(response.stress_level) }">{{ getRatingIcon(response.stress_level) }}</span></div>
-          <div class="rate-reason">{{ response.comment }}</div>
-        </div>
-      </q-card-section>
-    </q-card>
+    <div class="rate-card-cont">
+      <q-card v-for="(response, index) in responses" :key="index" class="myratings-card">
+        <q-card-section class="myratings-card-inner">
+          <div class="map-elem" :ref="el => mapElements[index] = el"></div>
+          <div class="rate-details">
+            <div class="rate-date"> Rating ID: {{ response.id }}</div>
+            <div class="rate"><span class="material-icons" :style="{ color: getRatingColor(response.stress_level) }">{{ getRatingIcon(response.stress_level) }}</span></div>
+            <div class="rate-reason">{{ response.comment }}</div>
+          </div>
+        </q-card-section>
+      </q-card>
+    </div>
   </div>
   <div class="text-primary text-center q-pa-md flex flex-center w-100" v-if="!isLoggedIn">
     <q-card>

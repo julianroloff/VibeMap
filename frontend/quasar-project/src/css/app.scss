@@ -89,6 +89,14 @@ html, body, #q-app {
 .h-100 {
     height: 100%;
 }
+.rate-card-cont {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-content: stretch;
+    align-items: stretch;
+}
 .rate-card{
     height: 100%;
     display: flex;
