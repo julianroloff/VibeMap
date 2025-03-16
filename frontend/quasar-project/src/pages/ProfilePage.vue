@@ -162,7 +162,7 @@ export default {
             username.value = data.username;
             localStorage.setItem('username', data.username)
             router.push('/');
-            alert("Login successful! Welcome back " + data.username);
+            alert("Login successful! Welcome back " + username.value);
           } else {
             console.error("Login failed", response.responseText);
             alert("Login failed", response.responseText);

@@ -33,7 +33,7 @@ import { ref, onMounted } from 'vue';
 export default {
   setup() {
     const ratings = ref([]);
-    const response = ref([]);
+    const response = ref();
     const responses = response;
     console.log(responses); 
     const loggedInId = ref("")
