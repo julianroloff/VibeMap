@@ -33,9 +33,9 @@ import { ref, onMounted } from 'vue';
 export default {
   setup() {
     const ratings = ref([]);
-    const response = ref();
-    const responses = response;
-    console.log(responses); 
+    //const response = ref();
+    const responses = ref([]);;
+    //console.log(responses); 
     const loggedInId = ref("")
     const mapElements = ref([]);
     const userInfo = ref([
@@ -57,8 +57,8 @@ export default {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const apiData = response.json(); // Parse the JSON response
-        response = apiData;
+        const apiData = await response.json(); // Parse the JSON response
+        responses.value = apiData;
         console.log(response);
       }
       catch (error) {
