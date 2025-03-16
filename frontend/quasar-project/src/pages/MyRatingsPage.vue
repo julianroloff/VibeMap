@@ -87,18 +87,18 @@ export default {
     const fetchUserData = async (token) => {
       console.log(token)
       try {
-        const response = await fetch('https://vibemapbe.com/auth/auth/me', {
+        const userDataResponse = await fetch('https://vibemapbe.com/auth/auth/me', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        if (!userDataResponse.ok) {
+          throw new Error(`HTTP error! Status: ${userDataResponse.status}`);
         }
 
-        const data = await response.json();
+        const data = await userDataResponse.json();
         userInfo.value[0] = {
           ...userInfo.value[0], // Keep existing fields
           username: data.email, // Update username from API
