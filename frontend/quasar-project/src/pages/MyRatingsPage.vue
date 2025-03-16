@@ -7,7 +7,7 @@
         <div class="map-elem" :ref="el => mapElements[index] = el"></div>
         <div class="rate-details">
           <div class="rate-date"> Rating ID: {{ response.id }}</div>
-          <div class="rate"><span class="material-icons" :style="{ color: getRatingColor(response.stress_level) }">{{ getRatingIcon(response.stress_level) }}</span></div>
+          <div class="rate"><span class="material-icons" :style="{ color: Math.round(getRatingColor(response.stress_level)) }">{{ Math.round(getRatingIcon(response.stress_level)) }}</span></div>
           <div class="rate-reason">{{ response.comment }}</div>
         </div>
       </q-card-section>
@@ -125,7 +125,7 @@ export default {
         const response = responses[index]; // Get corresponding rating data
 
         const map = new window.google.maps.Map(mapElement, {
-          center: { lat: response.latitude, lng: response.longitude },
+          center: { lat: Number(response.latitude), lng: Number(response.longitude) },
           zoom: 14,
           mapTypeControl: false,
           zoomControl: false,
@@ -134,7 +134,7 @@ export default {
         });
 
         new window.google.maps.Marker({
-          position: { lat: response.latitude, lng: response.longitude },
+          position: { lat: Number(response.latitude), lng: Number(response.longitude) },
           map: map,
           icon: {
                 path: window.google.maps.SymbolPath.CIRCLE,
