@@ -60,13 +60,13 @@ export default {
         const apiData = await response.json(); // Parse the JSON response
         const processedData = apiData.map(item => ({
           id: item.id,
-          stress_level: item.stress_level,
+          stress_level: Math.round(item.stress_level),
           comment: item.comment,
-          latitude: item.location?.latitude, // Use optional chaining to avoid errors
+          latitude: item.location?.latitude,
           longitude: item.location?.longitude,
         }));
         responses.value = processedData;
-        console.log(response);
+        console.log(responses.value);
       }
       catch (error) {
         console.error('Error fetching data:', error);
