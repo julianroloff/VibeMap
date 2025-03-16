@@ -62,11 +62,11 @@ export default {
           id: item.id,
           stress_level: Math.round(item.stress_level),
           comment: item.comment,
-          latitude: item.latitude,
-          longitude: item.longitude,
+          latitude: Number(item.latitude),
+          longitude: Number(item.longitude),
         }));
         responses.value = processedData;
-        console.log(responses.value);
+        console.log(responses);
       }
       catch (error) {
         console.error('Error fetching data:', error);
