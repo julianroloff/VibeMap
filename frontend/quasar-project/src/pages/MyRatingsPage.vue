@@ -47,7 +47,7 @@ export default {
     const fetchRatingdata = async () => {
       try {
         // Fetch data from the API
-        var response = fetch(`https://vibemapbe.com/location/location/locations/user/${loggedInId.value}`, {
+        var response = await fetch(`https://vibemapbe.com/location/location/locations/user/${loggedInId.value}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -67,15 +67,14 @@ export default {
     }
     
 
-    onMounted(() => {
+    onMounted(async () => {
+      usertoken.value = localStorage.getItem("usertoken");
+      loggedInId.value = Number(localStorage.getItem("loggedInId"));
+      await fetchUserData(usertoken.value);
+      await fetchRatingdata();
       setTimeout(() => {
         loadGoogleMaps();
       }, 1);
-
-      usertoken.value = localStorage.getItem("usertoken");
-      loggedInId.value = Number(localStorage.getItem("loggedInId"));
-      fetchUserData(usertoken.value);
-      fetchRatingdata();
     });
 
     const fetchUserData = async (token) => {
