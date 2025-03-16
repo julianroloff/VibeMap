@@ -48,9 +48,9 @@
           />
           <q-checkbox v-if="ratingModel === 3 || ratingModel === 4" class="checkbox nature"
             v-model="nature"
-            checked-icon="landscape_2"
-            unchecked-icon="landscape_2"
-            indeterminate-icon="landscape_2_off"
+            checked-icon="landscape"
+            unchecked-icon="landscape"
+            indeterminate-icon="landscape"
           />
           <q-input v-if="ratingModel"
             v-model="reason"
