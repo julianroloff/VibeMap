@@ -257,8 +257,8 @@ export default {
             scale: 1, // Size of the base shape
             fillColor: "#9C27B0", // Purple color for sport facilities
             fillOpacity: 1,
-            strokeWeight: 2,
-            strokeColor: "#ffffff",
+            strokeWeight: 1,
+            strokeColor: "#9C27B0",
           },
           title: facility.name, // Tooltip with the facility name
         });
