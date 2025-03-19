@@ -249,25 +249,27 @@ export default {
 
     addSportFacilitiesMarkers(sportFacilities) {
       sportFacilities.forEach(facility => {
-        const marker = new window.google.maps.Marker({
-          position: { lat: facility.latitude, lng: facility.longitude },
+        // Create a div element to hold the Material Icon
+        const icon = document.createElement("div");
+        icon.innerHTML = '<i class="material-icons" style="font-size: 24px; color: #000000;">fitness_center</i>';
+
+        // Create a PinElement with the Material Icon as the glyph
+        const pin = new window.google.maps.marker.PinElement({
+          glyph: icon,
+          glyphColor: "#000000", // Icon color
+          background: "#FFD700", // Gold background for the pin
+          borderColor: "#000000", // Border color
+        });
+
+        // Create an AdvancedMarkerElement with the PinElement as its content
+        const marker = new window.google.maps.marker.AdvancedMarkerElement({
           map: this.map,
-          icon: {
-            path: window.google.maps.SymbolPath.CIRCLE, // Base shape for the marker
-            scale: 8, // Size of the base shape
-            fillColor: "#31CCEC", // Blue color for sport facilities
-            fillOpacity: 1,
-            strokeWeight: 2,
-            strokeColor: "#ffffff",
-            label: {
-              text: "fitness_center", // Material icon text
-              fontFamily: "Material Icons", // Use the Material Icons font
-              fontSize: "20px", // Adjust the size of the icon
-              color: "#000000", // Icon color (black)
-            },
-          },
+          position: { lat: facility.latitude, lng: facility.longitude },
+          content: pin.element,
           title: facility.name, // Tooltip with the facility name
         });
+
+        // Store the marker in the array
         this.sportFacilitiesMarkers.push(marker);
       });
     },
