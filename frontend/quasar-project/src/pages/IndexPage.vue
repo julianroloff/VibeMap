@@ -48,9 +48,9 @@
           />
           <q-checkbox v-if="ratingModel === 3 || ratingModel === 4" class="checkbox nature"
             v-model="nature"
-            checked-icon="landscape"
-            unchecked-icon="landscape"
-            indeterminate-icon="landscape"
+            checked-icon="nature"
+            unchecked-icon="nature"
+            indeterminate-icon="nature"
           />
           <q-input v-if="ratingModel"
             v-model="reason"
@@ -176,6 +176,7 @@ export default {
       userMarker: null,
       currentCard: 1,
       showIntro: true,
+      sportFacilitiesMarkers: [], // Array to store sport facilities markers
     };
   },
   mounted() {
@@ -230,6 +231,45 @@ export default {
       });
       this.loadHeatmap();
       this.trackUserLocation();
+      this.loadSportFacilities(); // Load sport facilities when the map is initialized
+    },
+    
+    async loadSportFacilities() {
+      try {
+        const response = await fetch("https://vibemapbe.com/external/external/sport");
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const sportFacilitiesData = await response.json();
+        this.addSportFacilitiesMarkers(sportFacilitiesData.sport_parks);
+      } catch (error) {
+        console.error('Error fetching sport facilities data:', error);
+      }
+    },
+
+    addSportFacilitiesMarkers(sportFacilities) {
+      sportFacilities.forEach(facility => {
+        const marker = new window.google.maps.Marker({
+          position: { lat: facility.latitude, lng: facility.longitude },
+          map: this.map,
+          icon: {
+            path: window.google.maps.SymbolPath.CIRCLE, // Base shape for the marker
+            scale: 8, // Size of the base shape
+            fillColor: "#FFD700", // Gold color for sport facilities
+            fillOpacity: 1,
+            strokeWeight: 2,
+            strokeColor: "#ffffff",
+            label: {
+              text: "fitness_center", // Material icon text
+              fontFamily: "Material Icons", // Use the Material Icons font
+              fontSize: "20px", // Adjust the size of the icon
+              color: "#000000", // Icon color (black)
+            },
+          },
+          title: facility.name, // Tooltip with the facility name
+        });
+        this.sportFacilitiesMarkers.push(marker);
+      });
     },
 
     trackUserLocation() {
