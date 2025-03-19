@@ -184,13 +184,13 @@ export default {
   },
   methods: {
     loadGoogleMaps() {
-      if (window.google && window.google.maps) {
+      if (window.google && window.google.maps && window.google.maps.marker) {
         this.initMap();
         return;
       }
 
       const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCa6szZqcobw9AEf8KiqXUDpAoLgSR6v7A`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCa6szZqcobw9AEf8KiqXUDpAoLgSR6v7A&v=beta&libraries=marker`;
       script.async = true;
       script.defer = true;
       script.onload  = () => this.initMap();
@@ -256,9 +256,9 @@ export default {
         // Create a PinElement with the Material Icon as the glyph
         const pin = new window.google.maps.marker.PinElement({
           glyph: icon,
-          glyphColor: "#000000", // Icon color
-          background: "#FFD700", // Gold background for the pin
-          borderColor: "#000000", // Border color
+          glyphColor: "#ffffff", // Icon color
+          background: "#9C27B0", // Gold background for the pin
+          borderColor: "#9C27B0", // Border color
         });
 
         // Create an AdvancedMarkerElement with the PinElement as its content
