@@ -190,7 +190,7 @@ export default {
       }
 
       const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCa6szZqcobw9AEf8KiqXUDpAoLgSR6v7A&v=beta&libraries=marker`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCa6szZqcobw9AEf8KiqXUDpAoLgSR6v7A`;
       script.async = true;
       script.defer = true;
       script.onload  = () => this.initMap();
