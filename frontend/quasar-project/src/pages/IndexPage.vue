@@ -184,7 +184,7 @@ export default {
   },
   methods: {
     loadGoogleMaps() {
-      if (window.google && window.google.maps && window.google.maps.marker) {
+      if (window.google && window.google.maps) {
         this.initMap();
         return;
       }
