@@ -255,7 +255,7 @@ export default {
           icon: {
             path: window.google.maps.SymbolPath.CIRCLE, // Base shape for the marker
             scale: 8, // Size of the base shape
-            fillColor: "#FFD700", // Gold color for sport facilities
+            fillColor: "#31CCEC", // Blue color for sport facilities
             fillOpacity: 1,
             strokeWeight: 2,
             strokeColor: "#ffffff",
