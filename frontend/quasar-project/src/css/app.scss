@@ -89,6 +89,15 @@ html, body, #q-app {
 .h-100 {
     height: 100%;
 }
+.rate-card-cont {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-content: stretch;
+    align-items: stretch;
+    width: 100%;
+}
 .rate-card{
     height: 100%;
     display: flex;
@@ -97,6 +106,9 @@ html, body, #q-app {
     align-items: stretch;
     align-content: stretch;
     flex-wrap: nowrap;
+    .checkbox .q-checkbox__inner {
+        font-size: 60px !important;
+    }
 }
 .myratings-card {
     width: 100% !important;

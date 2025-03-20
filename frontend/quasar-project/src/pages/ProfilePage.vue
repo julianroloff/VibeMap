@@ -160,7 +160,7 @@ export default {
             usertoken.value = data.access_token;
             localStorage.setItem('usertoken', data.access_token)
             username.value = data.username;
-            localStorage.setItem('username', username.value)
+            localStorage.setItem('username', data.username)
             router.push('/');
             alert("Login successful! Welcome back " + username.value);
           } else {

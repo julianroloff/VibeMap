@@ -52,5 +52,8 @@ curl -X POST "https://vibemapbe.com/location/location/locations/" \
 
 ##Requesting locations created by user
 
-curl -X GET "http://vibemapbe.com/location/locations/user/{user_id}"
+curl -X GET "https://vibemapbe.com/location/location/locations/user/{user_id}"
 
+##Requesting locations personalized for the user
+
+curl -X GET "https://vibemapbe.com/location/location/locations/?user_id=1"
