@@ -37,20 +37,20 @@
           <q-checkbox v-if="ratingModel === 1 || ratingModel === 2" class="checkbox construction"
             v-model="construction"
             checked-icon="construction"
-            unchecked-icon="build_circle"
+            unchecked-icon="engineering"
             indeterminate-icon="construction"
           />
           <q-checkbox v-if="ratingModel === 3 || ratingModel === 4" class="checkbox sport"
             v-model="sport"
-            checked-icon="sports_tennis"
+            checked-icon="sports_handball"
             unchecked-icon="sports_tennis"
             indeterminate-icon="sports_tennis"
           />
           <q-checkbox v-if="ratingModel === 3 || ratingModel === 4" class="checkbox nature"
             v-model="nature"
-            checked-icon="nature"
-            unchecked-icon="nature"
-            indeterminate-icon="nature"
+            checked-icon="forest"
+            unchecked-icon="park"
+            indeterminate-icon="landscape"
           />
           <q-input v-if="ratingModel"
             v-model="reason"
@@ -504,7 +504,7 @@ export default {
         //dissipating: false,
         radius: 50, // Adjust this value to make the heat points bigger or smaller
         gradient: [
-          'rgba(255, 0, 0)', 
+          'rgba(255, 0, 0, 0)', 
           'rgba(255, 0, 0, 0.8)',   
         ]
       });
@@ -658,7 +658,7 @@ export default {
     return {
       ratingModel: ref(0),
       ratingColors: JSON.parse(localStorage.getItem("colorswitch")) 
-        ? ['red', 'amber-7', 'blue-7', 'green-7']  // Colors when colorswitch is true
+        ? ['red-7', 'amber-7', 'blue-7', 'green-7']  // Colors when colorswitch is true
         : ['red', 'orange', 'green', 'green-9'], // Default colors when colorswitch is false
       icons: [
         'sentiment_very_dissatisfied',
