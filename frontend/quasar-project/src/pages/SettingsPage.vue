@@ -10,6 +10,7 @@
       <q-card-section>
         <q-toggle v-model="constructionMarkings" label="Enable Construction Markings" @update:model-value="saveSetting('constructionMarkings', constructionMarkings)" />
         <q-toggle v-model="sportFacilities" label="Enable Sport Facility Markings" @update:model-value="saveSetting('sportFacilities', sportFacilities)" />
+        <q-toggle v-model="colorswitch" label="Enable Color Switch for accessibility" @update:model-value="saveSetting('colorswitch', colorswitch)" />
         <q-toggle v-model="highstress" label="Show High-Stress areas" @update:model-value="saveSetting('highstress', highstress)" />
         <q-toggle v-model="mediumstress" label="Show Medium-Stress areas" @update:model-value="saveSetting('mediumstress', mediumstress)" />
         <q-toggle v-model="nostress" label="Show No-Stress areas" @update:model-value="saveSetting('nostress', nostress)" />
@@ -27,6 +28,7 @@ export default {
   setup() {
     const constructionMarkings = ref();
     const sportFacilities = ref();
+    const colorswitch = ref();
     const highstress = ref();
     const mediumstress = ref();
     const nostress = ref();
@@ -37,6 +39,7 @@ export default {
     onMounted(() => {
       constructionMarkings.value = JSON.parse(localStorage.getItem("constructionMarkings"));
       sportFacilities.value = JSON.parse(localStorage.getItem("sportFacilities"));
+      colorswitch.value = JSON.parse(localStorage.getItem("colorswitch"));
       highstress.value = JSON.parse(localStorage.getItem("highstress"));
       mediumstress.value = JSON.parse(localStorage.getItem("mediumstress"));
       nostress.value = JSON.parse(localStorage.getItem("nostress"));
@@ -51,6 +54,7 @@ export default {
     return {
       constructionMarkings,
       sportFacilities,
+      colorswitch,
       nightMode,
       highstress,
       mediumstress,

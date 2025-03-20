@@ -108,6 +108,7 @@
         <div class="pref-cont">
           <q-toggle v-model="constructionMarkings" label="Enable Construction Markings" @update:model-value="saveSetting('constructionMarkings', constructionMarkings)" />
           <q-toggle v-model="sportFacilities" label="Enable Sport Facility Markings" @update:model-value="saveSetting('sportFacilities', sportFacilities)" />
+          <q-toggle v-model="colorswitch" label="Enable Color Switch for accessibility" @update:model-value="saveSetting('colorswitch', colorswitch)" />
           <q-toggle v-model="highstress" label="Show High-Stress areas" @update:model-value="saveSetting('highstress', highstress)" />
           <q-toggle v-model="mediumstress" label="Show Medium-Stress areas" @update:model-value="saveSetting('mediumstress', mediumstress)" />
           <q-toggle v-model="nostress" label="Show No-Stress areas" @update:model-value="saveSetting('nostress', nostress)" />
@@ -183,7 +184,7 @@ export default {
     this.loadGoogleMaps();
   },
   methods: {
-    loadGoogleMaps() {
+    async loadGoogleMaps() {
       if (window.google && window.google.maps) {
         this.initMap();
         return;
@@ -211,7 +212,7 @@ export default {
       this.showIntro = false;
     },
 
-    initMap() {
+    async initMap() {
       if (!navigator.geolocation) {
         console.error("Geolocation is not supported by this browser.");
         return this.loadDefaultLocation();
@@ -229,9 +230,18 @@ export default {
         fullscreenControl: false,
         gestureHandling: 'greedy'
       });
-      this.loadHeatmap();
-      this.trackUserLocation();
-      this.loadSportFacilities(); // Load sport facilities when the map is initialized
+      await this.trackUserLocation();
+      //if (this.constructionMarkings) {
+      //  this.loadConstructionMarkings();
+      //}
+      if (this.sportFacilities) {
+        await this.loadSportFacilities(); // Load sport facilities when the map is initialized
+      }
+      if (this.colorswitch) {
+        await this.loadAccessibleHeatmap();
+      }
+      if (!this.colorswitch || this.colorswitch == null)
+      await this.loadHeatmap();
     },
     
     async loadSportFacilities() {
@@ -347,10 +357,7 @@ export default {
     },
 
     async loadHeatmap() {
-      //const globalresponse = [inject('response')];
-      //console.log(globalresponse[0]._rawValue);
-      //const response = globalresponse[0]._rawValue;
-      var response = [];
+      var response = localStorage.getItem("response");
 
       try {
         // Fetch data from the API
@@ -359,12 +366,14 @@ export default {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const apiData = await response.json(); // Parse the JSON response
-        response = apiData;
+        if (apiData || apiData.length) {
+          response = apiData;
+        }
+        localStorage.setItem("response", JSON.stringify(response));
         console.log(response);
       }
       catch (error) {
         console.error('Error fetching data:', error);
-        //response = localStorage.getItem("response") ? JSON.parse(localStorage.getItem("response")) : [];
       }
 
       console.log(response);
@@ -392,16 +401,16 @@ export default {
           console.error("Invalid stress level:", item.stress_level);
         }
       });
-
-        var heatmap1 = new window.google.maps.visualization.HeatmapLayer({
-          data: stressLevel1,
-          //dissipating: false,
-          radius: 50, // Adjust this value to make the heat points bigger or smaller
-          gradient: [
-            'rgba(255, 0, 0, 0)', // Transparent for no rating
-            'rgba(255, 0, 0, 0.8)',   // Red for low weight (rating 1)
-          ]
-        });
+        
+      var heatmap1 = new window.google.maps.visualization.HeatmapLayer({
+        data: stressLevel1,
+        //dissipating: false,
+        radius: 50, // Adjust this value to make the heat points bigger or smaller
+        gradient: [
+          'rgba(255, 0, 0, 0)', // Transparent for no rating
+          'rgba(255, 0, 0, 0.8)',   // Red for low weight (rating 1)
+        ]
+      });
       var heatmap2 = new window.google.maps.visualization.HeatmapLayer({
         data: stressLevel2,
         //dissipating: false,
@@ -429,6 +438,7 @@ export default {
           'rgba(0, 255, 0, 0.8)'     // Green for high weight (rating 4)
         ]
       });
+    
       if  (this.highstress){
         heatmap1.setMap(this.map);
       }
@@ -441,6 +451,104 @@ export default {
       if  (this.absnostress){
         heatmap4.setMap(this.map);
       }
+
+    },
+    async loadAccessibleHeatmap() {
+      var response = localStorage.getItem("response");
+
+      try {
+        // Fetch data from the API
+        response = await fetch("https://vibemapbe.com/location/location/locations/");
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const apiData = await response.json(); // Parse the JSON response
+        if (apiData || apiData.length) {
+          response = apiData;
+        }
+        localStorage.setItem("response", JSON.stringify(response));
+        console.log(response);
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+      }
+
+      console.log(response);
+      const stressLevel1 = [];
+      const stressLevel2 = [];
+      const stressLevel3 = [];
+      const stressLevel4 = [];
+
+      response.forEach(item => {
+        const data ={ 
+          location: new window.google.maps.LatLng(item.latitude, item.longitude), 
+          weight: item.stress_level 
+        };
+        
+        // Categorize data based on stress level ranges
+        if (item.stress_level >= 0.5 && item.stress_level < 1.5) {
+          stressLevel1.push(data);
+        } else if (item.stress_level >= 1.5 && item.stress_level < 2.5) {
+          stressLevel2.push(data);
+        } else if (item.stress_level >= 2.5 && item.stress_level < 3.5) {
+          stressLevel3.push(data);
+        } else if (item.stress_level >= 3.5 && item.stress_level <= 4.5) {
+          stressLevel4.push(data);
+        } else {
+          console.error("Invalid stress level:", item.stress_level);
+        }
+      });
+        
+      var heatmap1 = new window.google.maps.visualization.HeatmapLayer({
+        data: stressLevel1,
+        //dissipating: false,
+        radius: 50, // Adjust this value to make the heat points bigger or smaller
+        gradient: [
+          'rgba(228, 82, 7, 0)', 
+          'rgba(228, 82, 7, 0.8)',   
+        ]
+      });
+      var heatmap2 = new window.google.maps.visualization.HeatmapLayer({
+        data: stressLevel2,
+        //dissipating: false,
+        radius: 50, // Adjust this value to make the heat points bigger or smaller
+        gradient: [
+          'rgba(248, 157, 9, 0)', 
+          'rgba(248, 157, 9, 0.8)', 
+        ]
+      });
+      var heatmap3 = new window.google.maps.visualization.HeatmapLayer({
+        data: stressLevel3,
+        //dissipating: false,
+        radius: 50, // Adjust this value to make the heat points bigger or smaller
+        gradient: [
+          'rgba(29, 107, 223, 0)',
+          'rgba(29, 107, 223, 0.8)', 
+        ]
+      });
+      var heatmap4 = new window.google.maps.visualization.HeatmapLayer({
+        data: stressLevel4,
+        //dissipating: false,
+        radius: 50, // Adjust this value to make the heat points bigger or smaller
+        gradient: [
+          'rgba(23, 179, 83, 0)', 
+          'rgba(23, 179, 83, 0.8)' 
+        ]
+      });
+    
+      if  (this.highstress){
+        heatmap1.setMap(this.map);
+      }
+      if  (this.mediumstress){
+        heatmap2.setMap(this.map);
+      }
+      if  (this.nostress){
+        heatmap3.setMap(this.map);
+      }
+      if  (this.absnostress){
+        heatmap4.setMap(this.map);
+      }
+
     },
 
     loadDefaultLocation() {
@@ -523,6 +631,7 @@ export default {
     const isLoggedIn = ref()
     const constructionMarkings = ref();
     const sportFacilities = ref();
+    const colorswitch = ref();
     const highstress = ref();
     const mediumstress = ref();
     const nostress = ref();
@@ -536,6 +645,7 @@ export default {
       //console.log(profileEdit.value)
       constructionMarkings.value = JSON.parse(localStorage.getItem("constructionMarkings"));
       sportFacilities.value = JSON.parse(localStorage.getItem("sportFacilities"));
+      colorswitch.value = JSON.parse(localStorage.getItem("colorswitch"));
       highstress.value = JSON.parse(localStorage.getItem("highstress"));
       mediumstress.value = JSON.parse(localStorage.getItem("mediumstress"));
       nostress.value = JSON.parse(localStorage.getItem("nostress"));
@@ -562,6 +672,7 @@ export default {
       isLoggedIn,
       constructionMarkings,
       sportFacilities,
+      colorswitch,
       nightMode,
       highstress,
       mediumstress,
