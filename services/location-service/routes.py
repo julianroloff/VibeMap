@@ -6,6 +6,8 @@ from models import Location
 from schemas import LocationCreate, LocationResponse
 from dependencies import get_db, get_current_user
 from geoalchemy2.functions import ST_Point
+from typing import Optional
+from fastapi import Query
 
 router = APIRouter()
 
@@ -31,7 +33,7 @@ async def add_location(
 
 # Get all locations
 @router.get("/locations/")
-async def get_locations(db: AsyncSession = Depends(get_db)):
+async def get_locations(user_id: Optional[int] = Query(None), db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(
             Location.id,
@@ -56,6 +58,9 @@ async def get_locations(db: AsyncSession = Depends(get_db)):
         }
         for row in result
     ]
+
+    if user_id is not None:
+        print(f"DEBUG: Received user_id: {user_id}")
 
     print(f"DEBUG: Retrieved locations: {locations}")  # Debug output
     return locations

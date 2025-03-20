@@ -14,10 +14,13 @@ pydantic
 
 #Create a Location Rating:
 
-curl -X POST "http://localhost:8002/location/locations/" \                                                       
+curl -X POST "http://localhost:8002/location/locations/" \   
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXdVc2VyQGV4YW1wbGUuY29tIiwidXNlcl9pZCI6MiwiZXhwIjoxNzQxODc4NjM2fQ.BVxUD8jufLI7hD2PHB_znuk7Mg7D2T_lS4XgFG0coeM" \
--H "Content-Type: application/json" \-d '{ 
-    "latitude": <xx>,
-    "longitude": <yy>,
-    "stress_level": <zz>
+-H "Content-Type: application/json" \
+-d '{
+  "latitude": 52.3748725,
+  "longitude": 4.9448453,
+  "comment": "Good soup",
+  "stress_level": 4
 }'
+
