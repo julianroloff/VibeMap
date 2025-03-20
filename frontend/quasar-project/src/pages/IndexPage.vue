@@ -504,8 +504,8 @@ export default {
         //dissipating: false,
         radius: 50, // Adjust this value to make the heat points bigger or smaller
         gradient: [
-          'rgba(228, 82, 7, 0)', 
-          'rgba(228, 82, 7, 0.8)',   
+          'rgba(255, 0, 0)', 
+          'rgba(255, 0, 0, 0.8)',   
         ]
       });
       var heatmap2 = new window.google.maps.visualization.HeatmapLayer({
@@ -657,7 +657,9 @@ export default {
     };
     return {
       ratingModel: ref(0),
-      ratingColors: [ 'red', 'orange', 'green', 'green-9'],
+      ratingColors: JSON.parse(localStorage.getItem("colorswitch")) 
+        ? ['red', 'amber-7', 'blue-7', 'green-7']  // Colors when colorswitch is true
+        : ['red', 'orange', 'green', 'green-9'], // Default colors when colorswitch is false
       icons: [
         'sentiment_very_dissatisfied',
         'sentiment_dissatisfied',
