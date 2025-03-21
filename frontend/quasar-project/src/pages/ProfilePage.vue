@@ -79,8 +79,6 @@ export default {
     const password = ref("")
     const usertoken = ref("")
     const router = useRouter();
-    //const storedEmail = userInfo.value[0].email
-    //const storedPassword = userInfo.value[0].token
 
     // Check if the user is logged in by reading localStorage
     onMounted(() => {
@@ -162,7 +160,7 @@ export default {
             username.value = data.username;
             localStorage.setItem('username', data.username)
             router.push('/');
-            alert("Login successful! Welcome back " + username.value);
+            alert("Login successful! Welcome back!");
           } else {
             console.error("Login failed", response.responseText);
             alert("Login failed", response.responseText);

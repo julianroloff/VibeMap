@@ -224,6 +224,31 @@ html, body, #q-app {
     height: 60px;
 }
 
+.personalOn-btn {
+    position: absolute;
+    bottom: 90px;
+    right: 15px;
+    z-index: 0;
+    border-radius: 100%;
+    width: 60px;
+    height: 60px;
+    background-color: $primary;
+    color: white;
+    justify-content: center;
+    .q-checkbox__icon {
+        font-size: 1.715rem;
+    }
+}
+
+.personalOn-btn[aria-checked="true"] {
+    background: $secondary;
+    color: white;
+}
+.personalOn-btn[aria-checked="false"] {
+    background: $primary;
+    color: white;
+}
+
 .intro-cont {
     position: fixed;
     left: 0;
