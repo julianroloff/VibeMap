@@ -328,7 +328,7 @@ def predict_stress_levels_hybrid(user_id, locations, user_similarity, location_s
         final_prediction = max(1, min(4, final_prediction))
         
         # Round to nearest integer
-        location['predicted_stress_level'] = int(round(final_prediction))
+        location['stress_level'] = final_prediction
     
     return locations
 
@@ -442,10 +442,10 @@ async def predict(
                 # Convert Pydantic model to dict if needed
                 if hasattr(location, "model_dump"):
                     location_dict = location.model_dump()
-                    location_dict["predicted_stress_level"] = location.stress_level
+                    location_dict["stress_level"] = location.stress_level
                     locations_with_predictions = [location_dict for location in locations]
                 else:
-                    location["predicted_stress_level"] = location["stress_level"]
+                    location["stress_level"] = location["stress_level"]
                     locations_with_predictions = locations
             return PredictionResponse(predictions=locations_with_predictions)
         
