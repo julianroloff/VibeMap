@@ -2,7 +2,7 @@
 
 echo "🚀 Installing global dependencies..."
 pip install --upgrade pip
-pip install fastapi uvicorn requests sqlalchemy passlib bcrypt pydantic pyjwt asyncpg geoalchemy2 numpy python-jose pyproj pydantic[email]
+pip install fastapi uvicorn requests sqlalchemy passlib bcrypt pydantic pyjwt asyncpg geoalchemy2 numpy python-jose pyproj pydantic[email] httpx pydantic-settings
 
 echo "🔍 Checking if Homebrew is installed..."
 if ! command -v brew &>/dev/null; then
@@ -61,8 +61,8 @@ done
 echo "🚀 Starting all services..."
 
 # Define service directories and ports
-SERVICES=("auth-service" "location-service" "heatmap-service" "ml-service" "external-api-fetcher")
-PORTS=(8001 8002 8003 8004 8005)
+SERVICES=("auth-service" "location-service" "ml-service" "external-api-fetcher")
+PORTS=(8001 8002 8004 8005)
 
 # Start each service
 for i in "${!SERVICES[@]}"; do

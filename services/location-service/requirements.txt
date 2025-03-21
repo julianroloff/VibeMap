@@ -24,3 +24,16 @@ curl -X POST "http://localhost:8002/location/locations/" \
   "stress_level": 4
 }'
 
+
+curl -X POST "http://localhost:8002/location/locations/" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqdWxlczJAZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjo0LCJleHAiOjE3NDI1NzkyMTR9.Qu5Vk28XnnC5iF8DB8AS24SETuueMJrHTgwfbLl2bW8" \
+-H "Content-Type: application/json" \
+-d '{
+  "latitude": 52.3748725,
+  "longitude": 4.9448453,
+  "comment": "Good soup",
+  "stress_level": 3.5
+}'
+
+curl -X GET "http://localhost:8002/location/locations/?user_id=1
+
