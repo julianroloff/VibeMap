@@ -9,6 +9,15 @@
         icon="my_location" 
         @click="recenterMap"
       />
+      <q-checkbox v-if="isLoggedIn" class="personalOn-btn"
+        v-model="personalOn"
+        color="white"
+        keep-color
+        checked-icon="person_off"
+        unchecked-icon="person"
+        indeterminate-icon="person"
+        @update:model-value="handlePersonalOnChange"
+        />
     </div>
     <div class="rate-cont p-5 pt-5">
       <q-card class="rate-card" v-if="isLoggedIn">
@@ -166,9 +175,11 @@
 <script>
 //import { latLng } from 'leaflet';
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router';
 //import { inject } from 'vue'
 //import { getModuleURL } from 'workbox-build';
 
+const router = useRouter();
 
 export default {
   data() {
@@ -184,6 +195,11 @@ export default {
     this.loadGoogleMaps();
   },
   methods: {
+    async handlePersonalOnChange(newValue) {
+      this.saveSetting('PersonalOn', newValue);
+      await this.loadHeatmap();
+      router.push('/');
+    },
     async loadGoogleMaps() {
       if (window.google && window.google.maps) {
         this.initMap();
@@ -230,6 +246,7 @@ export default {
         fullscreenControl: false,
         gestureHandling: 'greedy'
       });
+      
       await this.trackUserLocation();
       //if (this.constructionMarkings) {
       //  this.loadConstructionMarkings();
@@ -237,10 +254,19 @@ export default {
       if (this.sportFacilities) {
         await this.loadSportFacilities(); // Load sport facilities when the map is initialized
       }
-      if (this.colorswitch) {
-        await this.loadAccessibleHeatmap();
-      }
-      if (!this.colorswitch || this.colorswitch == null)
+      // Add the zoom_changed event listener
+      this.map.addListener("zoom_changed", () => {
+        const zoom = this.map.getZoom();
+        console.log("Zoom level:", zoom);
+
+        if (zoom) {
+          // Only show each marker above a certain zoom level.
+          this.sportFacilitiesMarkers.forEach(marker => {
+            marker.setMap(zoom >= 11 ? this.map : null);
+            console.log(`Marker visibility set to: ${zoom >= 11}`);
+          });
+        }
+      });
       await this.loadHeatmap();
     },
     
@@ -361,7 +387,11 @@ export default {
 
       try {
         // Fetch data from the API
-        response = await fetch("https://vibemapbe.com/location/location/locations/");
+        if (this.isLoggedIn && this.personalOn) {
+          response = await fetch(`https://vibemapbe.com/location/location/locations/?user_id=${localStorage.getItem("loggedInId")}`);
+        } else {
+          response = await fetch("https://vibemapbe.com/location/location/locations/");
+        }
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -370,13 +400,22 @@ export default {
           response = apiData;
         }
         localStorage.setItem("response", JSON.stringify(response));
-        console.log(response);
+        //console.log(response);
+
       }
       catch (error) {
         console.error('Error fetching data:', error);
       }
 
       console.log(response);
+      
+      const totalStress = response.reduce((sum, entry) => sum + entry.stress_level, 0);
+
+      const numberOfEntries = response.length;
+
+      const averageStress = totalStress / numberOfEntries;
+      console.log(`Average stress level: ${averageStress}`);
+
       const stressLevel1 = [];
       const stressLevel2 = [];
       const stressLevel3 = [];
@@ -401,43 +440,82 @@ export default {
           console.error("Invalid stress level:", item.stress_level);
         }
       });
-        
-      var heatmap1 = new window.google.maps.visualization.HeatmapLayer({
-        data: stressLevel1,
-        //dissipating: false,
-        radius: 50, // Adjust this value to make the heat points bigger or smaller
-        gradient: [
-          'rgba(255, 0, 0, 0)', // Transparent for no rating
-          'rgba(255, 0, 0, 0.8)',   // Red for low weight (rating 1)
-        ]
-      });
-      var heatmap2 = new window.google.maps.visualization.HeatmapLayer({
-        data: stressLevel2,
-        //dissipating: false,
-        radius: 50, // Adjust this value to make the heat points bigger or smaller
-        gradient: [
-          'rgba(255, 100, 0, 0)', // Transparent for no rating
-          'rgba(255, 100, 0, 0.8)', // Orange for weight 2
-        ]
-      });
-      var heatmap3 = new window.google.maps.visualization.HeatmapLayer({
-        data: stressLevel3,
-        //dissipating: false,
-        radius: 50, // Adjust this value to make the heat points bigger or smaller
-        gradient: [
-          'rgba(100, 255, 0, 0)', // Transparent for no rating
-          'rgba(100, 255, 0, 0.8)', // Light green for weight 3
-        ]
-      });
-      var heatmap4 = new window.google.maps.visualization.HeatmapLayer({
-        data: stressLevel4,
-        //dissipating: false,
-        radius: 50, // Adjust this value to make the heat points bigger or smaller
-        gradient: [
-          'rgba(0, 255, 0, 0)', // Transparent for no rating
-          'rgba(0, 255, 0, 0.8)'     // Green for high weight (rating 4)
-        ]
-      });
+      if (this.colorswitch) {
+        var heatmap1 = new window.google.maps.visualization.HeatmapLayer({
+          data: stressLevel1,
+          //dissipating: false,
+          radius: 50, // Adjust this value to make the heat points bigger or smaller
+          gradient: [
+            'rgba(255, 0, 0, 0)', 
+            'rgba(255, 0, 0, 0.8)',   
+          ]
+        });
+        var heatmap2 = new window.google.maps.visualization.HeatmapLayer({
+          data: stressLevel2,
+          //dissipating: false,
+          radius: 50, // Adjust this value to make the heat points bigger or smaller
+          gradient: [
+            'rgba(248, 157, 9, 0)', 
+            'rgba(248, 157, 9, 0.8)', 
+          ]
+        });
+        var heatmap3 = new window.google.maps.visualization.HeatmapLayer({
+          data: stressLevel3,
+          //dissipating: false,
+          radius: 50, // Adjust this value to make the heat points bigger or smaller
+          gradient: [
+            'rgba(29, 107, 223, 0)',
+            'rgba(29, 107, 223, 0.8)', 
+          ]
+        });
+        var heatmap4 = new window.google.maps.visualization.HeatmapLayer({
+          data: stressLevel4,
+          //dissipating: false,
+          radius: 50, // Adjust this value to make the heat points bigger or smaller
+          gradient: [
+            'rgba(23, 179, 83, 0)', 
+            'rgba(23, 179, 83, 0.8)' 
+          ]
+        });
+      }
+      if (!this.colorswitch || this.colorswitch == null) {
+        heatmap1 = new window.google.maps.visualization.HeatmapLayer({
+          data: stressLevel1,
+          //dissipating: false,
+          radius: 50, // Adjust this value to make the heat points bigger or smaller
+          gradient: [
+            'rgba(255, 0, 0, 0)', // Transparent for no rating
+            'rgba(255, 0, 0, 0.8)',   // Red for low weight (rating 1)
+          ]
+        });
+        heatmap2 = new window.google.maps.visualization.HeatmapLayer({
+          data: stressLevel2,
+          //dissipating: false,
+          radius: 50, // Adjust this value to make the heat points bigger or smaller
+          gradient: [
+            'rgba(255, 100, 0, 0)', // Transparent for no rating
+            'rgba(255, 100, 0, 0.8)', // Orange for weight 2
+          ]
+        });
+        heatmap3 = new window.google.maps.visualization.HeatmapLayer({
+          data: stressLevel3,
+          //dissipating: false,
+          radius: 50, // Adjust this value to make the heat points bigger or smaller
+          gradient: [
+            'rgba(100, 255, 0, 0)', // Transparent for no rating
+            'rgba(100, 255, 0, 0.8)', // Light green for weight 3
+          ]
+        });
+        heatmap4 = new window.google.maps.visualization.HeatmapLayer({
+          data: stressLevel4,
+          //dissipating: false,
+          radius: 50, // Adjust this value to make the heat points bigger or smaller
+          gradient: [
+            'rgba(0, 255, 0, 0)', // Transparent for no rating
+            'rgba(0, 255, 0, 0.8)'     // Green for high weight (rating 4)
+          ]
+        });
+      }
     
       if  (this.highstress){
         heatmap1.setMap(this.map);
@@ -453,103 +531,7 @@ export default {
       }
 
     },
-    async loadAccessibleHeatmap() {
-      var response = localStorage.getItem("response");
 
-      try {
-        // Fetch data from the API
-        response = await fetch("https://vibemapbe.com/location/location/locations/");
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const apiData = await response.json(); // Parse the JSON response
-        if (apiData || apiData.length) {
-          response = apiData;
-        }
-        localStorage.setItem("response", JSON.stringify(response));
-        console.log(response);
-      }
-      catch (error) {
-        console.error('Error fetching data:', error);
-      }
-
-      console.log(response);
-      const stressLevel1 = [];
-      const stressLevel2 = [];
-      const stressLevel3 = [];
-      const stressLevel4 = [];
-
-      response.forEach(item => {
-        const data ={ 
-          location: new window.google.maps.LatLng(item.latitude, item.longitude), 
-          weight: item.stress_level 
-        };
-        
-        // Categorize data based on stress level ranges
-        if (item.stress_level >= 0.5 && item.stress_level < 1.5) {
-          stressLevel1.push(data);
-        } else if (item.stress_level >= 1.5 && item.stress_level < 2.5) {
-          stressLevel2.push(data);
-        } else if (item.stress_level >= 2.5 && item.stress_level < 3.5) {
-          stressLevel3.push(data);
-        } else if (item.stress_level >= 3.5 && item.stress_level <= 4.5) {
-          stressLevel4.push(data);
-        } else {
-          console.error("Invalid stress level:", item.stress_level);
-        }
-      });
-        
-      var heatmap1 = new window.google.maps.visualization.HeatmapLayer({
-        data: stressLevel1,
-        //dissipating: false,
-        radius: 50, // Adjust this value to make the heat points bigger or smaller
-        gradient: [
-          'rgba(255, 0, 0, 0)', 
-          'rgba(255, 0, 0, 0.8)',   
-        ]
-      });
-      var heatmap2 = new window.google.maps.visualization.HeatmapLayer({
-        data: stressLevel2,
-        //dissipating: false,
-        radius: 50, // Adjust this value to make the heat points bigger or smaller
-        gradient: [
-          'rgba(248, 157, 9, 0)', 
-          'rgba(248, 157, 9, 0.8)', 
-        ]
-      });
-      var heatmap3 = new window.google.maps.visualization.HeatmapLayer({
-        data: stressLevel3,
-        //dissipating: false,
-        radius: 50, // Adjust this value to make the heat points bigger or smaller
-        gradient: [
-          'rgba(29, 107, 223, 0)',
-          'rgba(29, 107, 223, 0.8)', 
-        ]
-      });
-      var heatmap4 = new window.google.maps.visualization.HeatmapLayer({
-        data: stressLevel4,
-        //dissipating: false,
-        radius: 50, // Adjust this value to make the heat points bigger or smaller
-        gradient: [
-          'rgba(23, 179, 83, 0)', 
-          'rgba(23, 179, 83, 0.8)' 
-        ]
-      });
-    
-      if  (this.highstress){
-        heatmap1.setMap(this.map);
-      }
-      if  (this.mediumstress){
-        heatmap2.setMap(this.map);
-      }
-      if  (this.nostress){
-        heatmap3.setMap(this.map);
-      }
-      if  (this.absnostress){
-        heatmap4.setMap(this.map);
-      }
-
-    },
 
     loadDefaultLocation() {
       const defaultLocation = { lat: 52.377956, lng: 	4.897070 }; // Amsterdam fallback
@@ -629,6 +611,8 @@ export default {
   },
   setup () {
     const isLoggedIn = ref()
+    const personalOn = ref()
+    const loggedInId = ref("")
     const constructionMarkings = ref();
     const sportFacilities = ref();
     const colorswitch = ref();
@@ -640,6 +624,7 @@ export default {
     // Check if the user is logged in by reading localStorage
     onMounted(() => {
       isLoggedIn.value = localStorage.getItem("isLoggedIn") === "true";
+      personalOn.value = localStorage.getItem("PersonalOn") === "true";
       //localStorage.setItem("isLoggedIn", "true") 
       //console.log(isLoggedIn.value);
       //console.log(profileEdit.value)
@@ -651,6 +636,7 @@ export default {
       nostress.value = JSON.parse(localStorage.getItem("nostress"));
       absnostress.value = JSON.parse(localStorage.getItem("absnostress"));
       nightMode.value = JSON.parse(localStorage.getItem("nightMode"));
+      loggedInId.value = localStorage.getItem("loggedInId");
     })
     const saveSetting = (key, value) => {
       localStorage.setItem(key, JSON.stringify(value));
@@ -672,6 +658,7 @@ export default {
       nature: ref(false),
       sport: ref(false),
       isLoggedIn,
+      personalOn,
       constructionMarkings,
       sportFacilities,
       colorswitch,
@@ -680,6 +667,7 @@ export default {
       mediumstress,
       nostress,
       absnostress,
+      loggedInId,
       saveSetting
     }
   }

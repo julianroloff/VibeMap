@@ -79,8 +79,6 @@ export default {
     const password = ref("")
     const usertoken = ref("")
     const router = useRouter();
-    //const storedEmail = userInfo.value[0].email
-    //const storedPassword = userInfo.value[0].token
 
     // Check if the user is logged in by reading localStorage
     onMounted(() => {

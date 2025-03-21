@@ -97,7 +97,7 @@ const username = ref('');
 const termsAccepted = ref(false);
 const profilePicture = ref(null);
 const imageUrl = ref(null);
-const response = "";
+//const response = "";
 
 // Computed property to check if passwords match
 const passwordMismatch = computed(() => password.value !== passwordConfirm.value);
@@ -246,23 +246,26 @@ const submitForm = () => {
     },
     body: JSON.stringify(signupData)
   })
-  .then(response => response.json())
+  .then(response => {
+    if (!response.ok) {
+      // Handle HTTP errors (e.g., 400, 500)
+      return response.json().then(errorData => {
+        throw new Error(errorData.message || 'Signup failed');
+      });
+    }
+    return response.json();
+  })
   .then(data => {
-    if(response.status != 200){
-      alert(data);
-      router.push('/profile');
-    }
-    else{
-      // Handle successful signup
-      console.log('Signup successful:', data);
-      router.push('/');
-      saveToLocalStorage();
-    }
+    // Handle successful signup
+    alert('Signup successful. Please login to continue.');
+    console.log('Signup successful:', data);
+    router.push('/profile'); // Redirect to profile page
+    saveToLocalStorage(); // Save data to local storage
   })
   .catch(error => {
     // Handle signup error
     console.error('Signup error:', error);
-    alert('Signup failed. Please try again. Error: ' + error);
+    alert('Signup failed. Please try again. Error: ' + error.message);
   });
 };
 
