@@ -77,7 +77,7 @@ for i in "${!SERVICES[@]}"; do
     echo "▶️ Starting $SERVICE_DIR on port $PORT..."
     (
       cd "$SERVICE_DIR" || exit
-      uvicorn main:app --reload --host 0.0.0.0 --port "$PORT" &
+      nohup uvicorn main:app --reload --host 0.0.0.0 --port "$PORT" > "${SERVICES[$i]}.log" 2>&1 &
     )
 done
 
