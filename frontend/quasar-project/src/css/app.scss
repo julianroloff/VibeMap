@@ -110,6 +110,29 @@ html, body, #q-app {
         font-size: 60px !important;
     }
 }
+
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-direction: row;
+    .col-6 {
+        max-width: 50%;
+    }
+}
+.slider-label {
+    width:100%;
+    text-align: center;
+    font-size: 1.2em;
+}
+.distance {
+    margin-top: 8px;
+    font-size: 0.9em;
+    color: #666;
+}
+
 .myratings-card {
     width: 100% !important;
     display: flex;

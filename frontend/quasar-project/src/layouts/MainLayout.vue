@@ -5,9 +5,9 @@
       <q-toolbar class="q-card">
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer"/>
 
-        <q-toolbar-title class="text-center font-karla fw-600" @clcik="goHome">
+        <q-toolbar-title class="text-center font-karla fw-600" @click="goHome">
           <q-avatar>
-            <img src="../assets/vibemap-logo.svg" alt="VibeMap Logo" @clcik="goHome"/>
+            <img src="../assets/vibemap-logo.svg" alt="VibeMap Logo" @click="goHome"/>
           </q-avatar>
           <q-btn dense flat round @click="goHome" class="font-karla logotext">vibemap</q-btn>
         </q-toolbar-title>
@@ -74,7 +74,7 @@ export default {
 
     const menuList = [
       { icon: "map", label: "Map", separator: false, to: "/" },
-      { icon: "thumbs_up_down", label: "My ratings", separator: false, to: "/myratings" },
+      { icon: "thumbs_up_down", label: "Ratings", separator: false, to: "/myratings" },
       { icon: "person", label: "Profile", separator: true, to: "/profile" },
       { icon: "settings", label: "Settings", separator: false, to: "/settings" },
       { icon: "feedback", label: "Send Feedback", separator: false, to: "/feedback" },
